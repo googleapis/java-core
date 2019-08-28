@@ -5,14 +5,14 @@
   <version>1.88.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-core-http:current} -->
   <packaging>jar</packaging>
   <name>Google Cloud Core HTTP</name>
-  <url>https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-core-http</url>
+  <url>https://github.com/googleapis/java-core</url>
   <description>
     Core http module for the google-cloud.
   </description>
   <parent>
     <groupId>com.google.cloud</groupId>
-    <artifactId>google-cloud-clients</artifactId>
-    <version>0.106.1-alpha-SNAPSHOT</version><!-- {x-version-update:google-cloud-clients:current} -->
+    <artifactId>google-cloud-core-parent</artifactId>
+    <version>1.88.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
   </parent>
   <properties>
     <site.installationModule>google-cloud-core-http</site.installationModule>
@@ -42,16 +42,34 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-appengine</artifactId>
-      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api</groupId>
+      <artifactId>gax</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.api</groupId>
       <artifactId>gax-httpjson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api</groupId>
+      <artifactId>api-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-contrib-http-util</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
