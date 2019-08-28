@@ -15,22 +15,22 @@ If you are using Maven, add this to your pom.xml file
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-core</artifactId>
-  <version>1.84.0</version>
+  <version>1.88.0</version>
 </dependency>
 ```
 If you are using Gradle, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-core:1.84.0'
+compile 'com.google.cloud:google-cloud-core:1.88.0'
 ```
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-core" % "1.84.0"
+libraryDependencies += "com.google.cloud" % "google-cloud-core" % "1.88.0"
 ```
 [//]: # ({x-version-update-end})
 
 ## Java Versions
 
-Java 7 or above is required for using this client.
+Java 7 or above is required to use this client.
 
 ## Contributing
 
