@@ -285,6 +285,7 @@
         <groupId>com.google.auto.value</groupId>
         <artifactId>auto-value-annotations</artifactId>
         <version>${autovalue.version}</version>
+        <optional>true</optional> <!-- not needed at runtime -->
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
