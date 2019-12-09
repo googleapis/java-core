@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.91.4](https://www.github.com/googleapis/java-core/compare/v1.91.3...v1.91.4) (2019-12-09)
+
+
+### Dependencies
+
+* update dependency com.google.api-client:google-api-client-bom to v1.30.5 ([#68](https://www.github.com/googleapis/java-core/issues/68)) ([e1a4047](https://www.github.com/googleapis/java-core/commit/e1a4047fb470ea4f80459ca0bb399f4ab2c7decf))
+* update dependency com.google.api:gax-bom to v1.50.1 ([#73](https://www.github.com/googleapis/java-core/issues/73)) ([f493b5b](https://www.github.com/googleapis/java-core/commit/f493b5bbe5945202af6a94fe01407f795014b4a1))
+* update dependency com.google.api:gax-bom to v1.51.0 ([#85](https://www.github.com/googleapis/java-core/issues/85)) ([71d0de7](https://www.github.com/googleapis/java-core/commit/71d0de782432814971facb7cbb67acdec5e45f00))
+* update dependency com.google.http-client:google-http-client-bom to v1.33.0 ([#71](https://www.github.com/googleapis/java-core/issues/71)) ([8f1e690](https://www.github.com/googleapis/java-core/commit/8f1e690611e98855d0eed26d7ef75120bccc862e))
+* update dependency io.grpc:grpc-bom to v1.25.0 ([#72](https://www.github.com/googleapis/java-core/issues/72)) ([3a09fc7](https://www.github.com/googleapis/java-core/commit/3a09fc7c4ce73a3c4f144d0cd4da6d29a1664b75))
+* update to threetenbp 1.4.0 ([#89](https://www.github.com/googleapis/java-core/issues/89)) ([5128bd4](https://www.github.com/googleapis/java-core/commit/5128bd45bae8cbb8540eccd683f5bba52783feef))
+
 ### [1.91.3](https://www.github.com/googleapis/java-core/compare/v1.91.2...v1.91.3) (2019-10-23)
 
 
