@@ -117,7 +117,8 @@ public class ServiceOptionsTest {
           + "  \"project_id\": \"someprojectid\",\n"
           + "  \"client_email\": \"someclientid@developer.gserviceaccount.com\",\n"
           + "  \"client_id\": \"someclientid.apps.googleusercontent.com\",\n"
-          + "  \"type\": \"service_account\"\n"
+          + "  \"type\": \"service_account\",\n"
+          + "  \"quota_project_id\": \"some-quota-project-id\"\n"
           + "}";
   private static GoogleCredentials credentialsWithProjectId;
 
@@ -138,6 +139,7 @@ public class ServiceOptionsTest {
           .setHost("host")
           .setProjectId("project-id")
           .setRetrySettings(ServiceOptions.getNoRetrySettings())
+          .setQuotaProjectId("quota-project-id")
           .build();
   private static final TestServiceOptions OPTIONS_NO_CREDENTIALS =
       TestServiceOptions.newBuilder()
@@ -281,6 +283,7 @@ public class ServiceOptionsTest {
     assertSame(CurrentMillisClock.getDefaultClock(), DEFAULT_OPTIONS.getClock());
     assertEquals("https://www.googleapis.com", DEFAULT_OPTIONS.getHost());
     assertSame(ServiceOptions.getDefaultRetrySettings(), DEFAULT_OPTIONS.getRetrySettings());
+    assertEquals("quota-project-id", OPTIONS.getQuotaProjectId());
   }
 
   @Test
@@ -293,6 +296,7 @@ public class ServiceOptionsTest {
     assertEquals("host", OPTIONS_NO_CREDENTIALS.getHost());
     assertEquals("project-id", OPTIONS_NO_CREDENTIALS.getProjectId());
     assertSame(ServiceOptions.getNoRetrySettings(), OPTIONS_NO_CREDENTIALS.getRetrySettings());
+    assertEquals("quota-project-id", OPTIONS.getQuotaProjectId());
   }
 
   @Test
@@ -306,6 +310,13 @@ public class ServiceOptionsTest {
     TestServiceOptions options =
         TestServiceOptions.newBuilder().setCredentials(credentialsWithProjectId).build();
     assertEquals("someprojectid", options.getProjectId());
+  }
+
+  @Test
+  public void testBuilderServiceAccount_setsQuotaProjectId() {
+    TestServiceOptions options =
+        TestServiceOptions.newBuilder().setCredentials(credentialsWithProjectId).build();
+    assertEquals("some-quota-project-id", options.getQuotaProjectId());
   }
 
   @Test
@@ -372,7 +383,8 @@ public class ServiceOptionsTest {
     Files.write("{\"project_id\":\"my-project-id\"}".getBytes(), credentialsFile);
 
     assertEquals(
-        "my-project-id", ServiceOptions.getServiceAccountProjectId(credentialsFile.getPath()));
+        "my-project-id",
+        ServiceOptions.getValueFromCredentialsFile(credentialsFile.getPath(), "project_id"));
   }
 
   @Test
@@ -381,14 +393,14 @@ public class ServiceOptionsTest {
     credentialsFile.deleteOnExit();
     Files.write("asdfghj".getBytes(), credentialsFile);
 
-    assertNull(ServiceOptions.getServiceAccountProjectId(credentialsFile.getPath()));
+    assertNull(ServiceOptions.getValueFromCredentialsFile(credentialsFile.getPath(), "project_id"));
   }
 
   @Test
   public void testGetServiceAccountProjectId_nonExistentFile() throws Exception {
     File credentialsFile = new File("/doesnotexist");
 
-    assertNull(ServiceOptions.getServiceAccountProjectId(credentialsFile.getPath()));
+    assertNull(ServiceOptions.getValueFromCredentialsFile(credentialsFile.getPath(), "project_id"));
   }
 
   @Test
