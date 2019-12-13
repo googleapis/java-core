@@ -365,13 +365,6 @@ public class ServiceOptionsTest {
   }
 
   @Test
-  public void testBuilderServiceAccount_setsQuotaProjectId() {
-    TestServiceOptions options =
-        TestServiceOptions.newBuilder().setCredentials(credentialsWithProjectId).build();
-    assertEquals("some-quota-project-id", options.getQuotaProjectId());
-  }
-
-  @Test
   public void testBuilderServiceAccount_explicitSetProjectIdBefore() {
     TestServiceOptions options =
         TestServiceOptions.newBuilder()
