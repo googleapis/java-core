@@ -328,6 +328,11 @@ public class ServiceOptionsTest {
             .setQuotaProjectId("quota-project-id")
             .setCredentials(credentialsWithQuotaProject)
             .build();
+    TestServiceOptions quotaProjectCredsWithQuotaProject2 =
+        TestServiceOptions.newBuilder()
+            .setCredentials(credentialsWithQuotaProject)
+            .setQuotaProjectId("quota-project-id")
+            .build();
     TestServiceOptions quotaProjectCreds =
         TestServiceOptions.newBuilder().setCredentials(credentialsWithQuotaProject).build();
     TestServiceOptions none =
@@ -338,6 +343,7 @@ public class ServiceOptionsTest {
 
     assertEquals("quota-project-id", noCredsWithQuotaProject.getQuotaProjectId());
     assertEquals("quota-project-id", quotaProjectCredsWithQuotaProject.getQuotaProjectId());
+    assertEquals("quota-project-id", quotaProjectCredsWithQuotaProject2.getQuotaProjectId());
     assertEquals("some-quota-project-id", quotaProjectCreds.getQuotaProjectId());
     assertEquals(null, none.getQuotaProjectId());
   }
