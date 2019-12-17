@@ -31,9 +31,10 @@ import java.io.IOException;
 import javax.annotation.Nullable;
 
 /**
- * Provides utilities for Open Census to record http stats/trace information and propagate tracing
+ * Provides utilities for OpenCensus to record http stats/trace information and propagate tracing
  * context.
  */
+@Deprecated
 public final class CensusHttpModule {
 
   /**
