@@ -16,20 +16,23 @@
 
 package com.google.cloud;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.api.core.InternalApi;
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
+
 import java.util.*;
 
 public class Binding {
-  private Role role;
-  private Set<Identity> identities;
+  private String role;
+  private List<String> members;
   private Condition condition;
 
   public static class Builder {
-    private Role role;
-    private Set<Identity> identities;
+    private List<String> members = new ArrayList();
+    private String role;
     private Condition condition;
 
     @InternalApi("This class should only be extended within google-cloud-java")
@@ -38,56 +41,54 @@ public class Binding {
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Builder(Binding binding) {
       setRole(binding.role);
-      setIdentities(binding.identities);
+      setMembers(binding.members);
       setCondition(binding.condition);
     }
 
-    public final Binding.Builder setRole(Role role) {
+    public final Binding.Builder setRole(String role) {
+      String nullIdentityMessage = "The role cannot be null.";
+      checkNotNull(role, nullIdentityMessage);
       this.role = role;
       return this;
     }
 
-    public final Binding.Builder setIdentities(Set<Identity> identities) {
-      this.identities = identities;
+    public final Binding.Builder setMembers(List<String> members) {
+      String nullIdentityMessage = "Null members are not permitted.";
+      checkNotNull(members, nullIdentityMessage);
+      this.members.clear();
+      for (String member : members) {
+        // Check member not null
+        this.members.add(member);
+      }
+      return this;
+    }
+
+    public final Binding.Builder removeMembers(String first, String... others) {
+      String nullIdentityMessage = "Null members are not permitted.";
+      checkNotNull(first, nullIdentityMessage);
+      checkNotNull(others, nullIdentityMessage);
+      this.members.remove(first);
+      for (String member : others) {
+        if (member != null)
+          this.members.remove(member);
+      }
+      return this;
+    }
+
+    public final Binding.Builder addMembers(String first, String... others) {
+      String nullIdentityMessage = "Null identities are not permitted.";
+      checkNotNull(first, nullIdentityMessage);
+      checkNotNull(others, nullIdentityMessage);
+      this.members.add(first);
+      for (String member : others) {
+        if (member != null)
+          this.members.add(member);
+      }
       return this;
     }
 
     public final Binding.Builder setCondition(Condition condition) {
       this.condition = condition;
-      return this;
-    }
-
-    /**
-     * Adds one or more identities to the binding
-     *
-     * @throws NullPointerException if any of the identities is null.
-     */
-    public final Builder addIdentity(Identity first, Identity... others) {
-      String nullIdentityMessage = "Null identities are not permitted.";
-      checkNotNull(first, nullIdentityMessage);
-      checkNotNull(others, nullIdentityMessage);
-      for (Identity identity : others) {
-        checkNotNull(identity, nullIdentityMessage);
-      }
-      Set<Identity> toAdd = new LinkedHashSet<>();
-      toAdd.add(first);
-      toAdd.addAll(Arrays.asList(others));
-      if (identities == null) {
-        identities = new HashSet<>();
-      }
-      identities.addAll(toAdd);
-      return this;
-    }
-
-    /**
-     * Removes one or more identities from an existing binding. Does nothing if the binding
-     * associated with the provided role doesn't exist.
-     */
-    public final Builder removeIdentity(Identity first, Identity... others) {
-      if (identities != null) {
-        identities.remove(first);
-        identities.removeAll(Arrays.asList(others));
-      }
       return this;
     }
 
@@ -99,7 +100,7 @@ public class Binding {
 
   private Binding(Binding.Builder builder) {
     this.role = builder.role;
-    this.identities = builder.identities;
+    this.members = ImmutableList.copyOf(builder.members);
     this.condition = builder.condition;
   }
 
@@ -107,12 +108,12 @@ public class Binding {
     return new Binding.Builder(this);
   }
 
-  public Role getRole() {
+  public String getRole() {
     return this.role;
   }
 
-  public Set<Identity> getIdentities() {
-    return this.identities;
+  public List<String> getMembers() {
+    return this.members;
   }
 
   public Condition getCondition() {
@@ -123,14 +124,14 @@ public class Binding {
   public String toString() {
     return MoreObjects.toStringHelper(this)
         .add("role", role)
-        .add("identities", identities)
+        .add("members", members)
         .add("condition", condition)
         .toString();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getClass(), role, identities, condition);
+    return Objects.hash(getClass(), role, members, condition);
   }
 
   @Override
@@ -143,7 +144,7 @@ public class Binding {
     }
     Binding other = (Binding) obj;
     return Objects.equals(role, other.getRole())
-        && Objects.equals(identities, other.getIdentities())
+        && Objects.equals(members, other.getMembers())
         && Objects.equals(condition, other.getCondition());
   }
 

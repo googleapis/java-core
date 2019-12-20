@@ -29,6 +29,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import com.google.protobuf.ByteString;
+import com.google.type.Expr;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,29 +51,31 @@ import java.util.Set;
 public final class Policy implements Serializable {
 
   private static final long serialVersionUID = -3348914530232544290L;
-  private final List<Binding> bindingsV3;
+  private final List<Binding> bindingsList;
   private final String etag;
   private final int version;
+
+  /*
+   * Return false if Policy is version 3 OR bindings has a conditional binding.
+   * Return true if Policy is version 1 AND bindings does not have a conditional binding.
+   */
+  private static boolean checkVersion(int version, List<Binding> bindingsList) {
+    for (Binding binding : bindingsList) {
+      if (binding.getCondition() != null) {
+        return false;
+      }
+    }
+    if (version > 1) {
+      return false;
+    }
+    return true;
+  }
 
   public abstract static class Marshaller<T> {
 
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Marshaller() {}
 
-    protected static final ApiFunction<String, Identity> IDENTITY_VALUE_OF_FUNCTION =
-        new ApiFunction<String, Identity>() {
-          @Override
-          public Identity apply(String identityPb) {
-            return Identity.valueOf(identityPb);
-          }
-        };
-    protected static final ApiFunction<Identity, String> IDENTITY_STR_VALUE_FUNCTION =
-        new ApiFunction<Identity, String>() {
-          @Override
-          public String apply(Identity identity) {
-            return identity.strValue();
-          }
-        };
 
     protected abstract Policy fromPb(T policyPb);
 
@@ -82,26 +86,22 @@ public final class Policy implements Serializable {
 
     @Override
     protected Policy fromPb(com.google.iam.v1.Policy policyPb) {
-        List<Binding> bindingsV3 = new ArrayList<Binding>();
+        List<Binding> bindingsList = new ArrayList<Binding>();
         for (com.google.iam.v1.Binding bindingPb : policyPb.getBindingsList()) {
-          bindingsV3.add(
-                  Binding.newBuilder().setRole(Role.of(bindingPb.getRole()))
-                          .setIdentities(ImmutableSet.copyOf(
-                                  Lists.transform(
-                                          bindingPb.getMembersList(),
-                                          new Function<String, Identity>() {
-                                            @Override
-                                            public Identity apply(String s) {
-                                              return IDENTITY_VALUE_OF_FUNCTION.apply(s);
-                                            }
-                                          })))
-                          .setCondition(null)
-                          .build());
-          // TODO(frankyn): Add support for bindingBuilder.setCondition after com.google.iam.v1 is regenerated.
-
+          Binding.Builder convertedBinding = Binding.newBuilder().setRole(bindingPb.getRole())
+                  .setMembers(ImmutableList.copyOf(bindingPb.getMembersList()));
+          if (bindingPb.hasCondition()) {
+            Expr expr = bindingPb.getCondition();
+            convertedBinding.setCondition(Condition.newBuilder()
+                    .setTitle(expr.getTitle())
+                    .setDescription(expr.getDescription())
+                    .setExpression(expr.getExpression())
+                    .build());
+          }
+          bindingsList.add(convertedBinding.build());
         }
         return newBuilder()
-                .setBindingsV3(bindingsV3)
+                .setBindings(bindingsList)
                 .setEtag(
                         policyPb.getEtag().isEmpty()
                                 ? null
@@ -114,19 +114,18 @@ public final class Policy implements Serializable {
     protected com.google.iam.v1.Policy toPb(Policy policy) {
       com.google.iam.v1.Policy.Builder policyBuilder = com.google.iam.v1.Policy.newBuilder();
       List<com.google.iam.v1.Binding> bindingPbList = new LinkedList<>();
-      for (Binding binding : policy.getBindingsV3()) {
+      for (Binding binding : policy.getBindingsList()) {
         com.google.iam.v1.Binding.Builder bindingBuilder = com.google.iam.v1.Binding.newBuilder();
-        bindingBuilder.setRole(binding.getRole().getValue());
-        bindingBuilder.addAllMembers(
-                Lists.transform(
-                        new ArrayList<>(binding.getIdentities()),
-                        new Function<Identity, String>() {
-                          @Override
-                          public String apply(Identity identity) {
-                            return IDENTITY_STR_VALUE_FUNCTION.apply(identity);
-                          }
-                        }));
-        // TODO(frankyn): Add support for bindingBuilder.setCondition after com.google.iam.v1 is regenerated.
+        bindingBuilder.setRole(binding.getRole());
+        bindingBuilder.addAllMembers(ImmutableList.copyOf(binding.getMembers()));
+        if (binding.getCondition() != null) {
+          Condition condition = binding.getCondition();
+          bindingBuilder.setCondition(Expr.newBuilder()
+                  .setTitle(condition.getTitle())
+                  .setDescription(condition.getDescription())
+                  .setExpression(condition.getExpression())
+                  .build());
+        }
         bindingPbList.add(bindingBuilder.build());
       }
       policyBuilder.addAllBindings(bindingPbList);
@@ -140,7 +139,7 @@ public final class Policy implements Serializable {
 
   /** A builder for {@code Policy} objects. */
   public static class Builder {
-    private final List<Binding> bindingsV3 = new ArrayList();
+    private final List<Binding> bindingsList = new ArrayList();
     private String etag;
     private int version;
 
@@ -149,7 +148,7 @@ public final class Policy implements Serializable {
 
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Builder(Policy policy) {
-      setBindingsV3(policy.bindingsV3);
+      setBindings(policy.bindingsList);
       setEtag(policy.etag);
       setVersion(policy.version);
     }
@@ -159,48 +158,51 @@ public final class Policy implements Serializable {
      *
      * @throws NullPointerException if the given map is null or contains any null keys or values
      * @throws IllegalArgumentException if any identities in the given map are null
-     * @throws IllegalArgumentException if policy version is equal to 3.
+     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
      */
     public final Builder setBindings(Map<Role, Set<Identity>> bindings) {
       checkNotNull(bindings, "The provided map of bindings cannot be null.");
+      checkArgument(checkVersion(this.version, this.bindingsList),
+              "setBindings() is only supported with version 1 policies and non-conditional policies");
       for (Map.Entry<Role, Set<Identity>> binding : bindings.entrySet()) {
         checkNotNull(binding.getKey(), "The role cannot be null.");
         Set<Identity> identities = binding.getValue();
         checkNotNull(identities, "A role cannot be assigned to a null set of identities.");
         checkArgument(!identities.contains(null), "Null identities are not permitted.");
       }
-      // convert into v3 format
-      this.bindingsV3.clear();
+      // convert into List format
+      this.bindingsList.clear();
       for (Map.Entry<Role, Set<Identity>> binding : bindings.entrySet()) {
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.setIdentities(new HashSet<>(binding.getValue()));
-        bindingBuilder.setRole(binding.getKey());
-        this.bindingsV3.add(bindingBuilder.build());
+        bindingBuilder.setRole(binding.getKey().getValue());
+        for (Identity identity : binding.getValue()) {
+            bindingBuilder.addMembers(identity.strValue());
+        }
+        this.bindingsList.add(bindingBuilder.build());
       }
       return this;
     }
 
     /**
-     * Replaces the builder's map of bindings with the given map of bindingsV3.
+     * Replaces the builder's List of bindings with the given List of Bindings.
      *
      * @throws NullPointerException if the given map is null or contains any null keys or values
      * @throws IllegalArgumentException if any identities in the given map are null
      */
-    public final Builder setBindingsV3(List<Binding> bindings) {
+    public final Builder setBindings(List<Binding> bindings) {
       for (Binding binding : bindings) {
-        checkNotNull(binding.getRole().getValue(), "The role cannot be null.");
-        Set<Identity> identities = binding.getIdentities();
-        checkNotNull(identities, "A role cannot be assigned to a null set of identities.");
-        checkArgument(!identities.contains(null), "Null identities are not permitted.");
+        checkNotNull(binding.getRole(), "The role cannot be null.");
+        List<String> members = binding.getMembers();
+        checkNotNull(members, "A role cannot be assigned to a null set of identities.");
+        checkArgument(!members.contains(null), "Null identities are not permitted.");
       }
-      // Set version to 3.
-      this.bindingsV3.clear();
+      this.bindingsList.clear();
       for (Binding binding : bindings) {
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.setIdentities(new HashSet<>(binding.getIdentities()));
+        bindingBuilder.setMembers(new ArrayList<String>(binding.getMembers()));
         bindingBuilder.setRole(binding.getRole());
         bindingBuilder.setCondition(binding.getCondition());
-        this.bindingsV3.add(bindingBuilder.build());
+        this.bindingsList.add(bindingBuilder.build());
       }
       return this;
     }
@@ -208,13 +210,16 @@ public final class Policy implements Serializable {
 
     /** Removes the role (and all identities associated with that role) from the policy. */
     public final Builder removeRole(Role role) {
-      checkArgument(this.version != 3, "removeRole is not supported with version 3 policies.");
-      for (Binding binding : bindingsV3) {
-        if (binding.getRole().equals(role)) {
-          bindingsV3.remove(binding);
+      checkArgument(checkVersion(this.version, this.bindingsList),
+              "removeRole() is only supported with version 1 policies and non-conditional policies");
+      for (int i = 0; i < bindingsList.size(); ++i) {
+          Binding binding = bindingsList.get(i);
+        if (binding.getRole().equals(role.getValue())) {
+            System.out.println(role.getValue() + " " + binding.getRole());
+          bindingsList.remove(i);
+          return this;
         }
       }
-
       return this;
     }
 
@@ -222,48 +227,65 @@ public final class Policy implements Serializable {
      * Adds one or more identities to the policy under the role specified.
      *
      * @throws NullPointerException if the role or any of the identities is null.
-     * @throws IllegalArgumentException if policy version is equal to 3.
+     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
      */
     public final Builder addIdentity(Role role, Identity first, Identity... others) {
-      checkArgument(this.version != 3, "removeRole is not supported with version 3 policies.");
+      checkArgument(checkVersion(this.version, this.bindingsList),
+              "addIdentity() is only supported with version 1 policies and non-conditional policies");
       String nullIdentityMessage = "Null identities are not permitted.";
       checkNotNull(first, nullIdentityMessage);
       checkNotNull(others, nullIdentityMessage);
-      for (Binding binding : bindingsV3) {
-        if (binding.getRole().equals(checkNotNull(role, "The role cannot be null."))) {
-          Binding.Builder bindingBuilder = binding.toBuilder();
-          bindingBuilder.addIdentity(first, others);
-          bindingsV3.remove(binding);
-          bindingsV3.add(bindingBuilder.build());
-          return this;
+      checkNotNull(role, "The role cannot be null.");
+      for (int i = 0; i < bindingsList.size(); ++i) {
+        Binding binding = bindingsList.get(i);
+        if (binding.getRole().equals(role.getValue())) {
+            Binding.Builder bindingBuilder = binding.toBuilder().addMembers(first.strValue());
+            for (Identity identity : others) {
+                bindingBuilder.addMembers(identity.strValue());
+            }
+            bindingsList.set(i, bindingBuilder.build());
+            return this;
         }
+        }
+      List<String> members = new ArrayList<>();
+      members.add(first.strValue());
+      for (Identity identity : others) {
+          if (identity != null)
+            members.add(identity.strValue());
       }
-
-      Binding.Builder bindingBuilder = Binding.newBuilder();
-      bindingBuilder.setRole(role);
-      bindingBuilder.addIdentity(first, others);
-      bindingsV3.add(bindingBuilder.build());
-
+      bindingsList.add(Binding.newBuilder()
+              .setRole(role.getValue())
+              .setMembers(members)
+              .build());
       return this;
     }
 
     /**
      * Removes one or more identities from an existing binding. Does nothing if the binding
      * associated with the provided role doesn't exist.
-     * @throws IllegalArgumentException if policy version is equal to 3.
+     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
      */
     public final Builder removeIdentity(Role role, Identity first, Identity... others) {
-      checkArgument(this.version != 3, "removeRole is not supported with version 3 policies.");
-      for (Binding binding : bindingsV3) {
-        if (binding.getRole().equals(checkNotNull(role, "The role cannot be null."))) {
-          Binding.Builder bindingBuilder = binding.toBuilder();
-          bindingBuilder.removeIdentity(first, others);
-          bindingsV3.remove(binding);
-          Binding builtBinding = bindingBuilder.build();
-          if (builtBinding.getIdentities() != null && !builtBinding.getIdentities().isEmpty()) {
-            bindingsV3.add(builtBinding);
+      checkArgument(checkVersion(this.version, this.bindingsList),
+              "removeIdentity() is only supported with version 1 policies and non-conditional policies");
+      String nullIdentityMessage = "Null identities are not permitted.";
+      checkNotNull(first, nullIdentityMessage);
+      checkNotNull(others, nullIdentityMessage);
+      checkNotNull(role, "The role cannot be null.");
+      for (int i = 0; i < bindingsList.size(); ++i) {
+        Binding binding = bindingsList.get(i);
+        if (binding.getRole().equals(role.getValue())) {
+          Binding.Builder bindingBuilder = binding.toBuilder().removeMembers(first.strValue());
+          for (Identity identity : others) {
+              bindingBuilder.removeMembers(identity.strValue());
           }
-          break;
+          Binding updatedBindings = bindingBuilder.build();
+          if (updatedBindings.getMembers().size() == 0) {
+              bindingsList.remove(i);
+          } else {
+              bindingsList.set(i, updatedBindings);
+          }
+          return this;
         }
       }
       return this;
@@ -301,15 +323,8 @@ public final class Policy implements Serializable {
   }
 
   private Policy(Builder builder) {
-    ImmutableList.Builder<Binding> bindingsV3Builder = ImmutableList.builder();
-    for (Binding binding : builder.bindingsV3) {
-      Binding.Builder bindingBuilder = Binding.newBuilder();
-      bindingBuilder.setRole(binding.getRole())
-              .setIdentities(ImmutableSet.copyOf(binding.getIdentities()))
-              .setCondition(binding.getCondition());
-      bindingsV3Builder.add(bindingBuilder.build());
-    }
-    this.bindingsV3 = bindingsV3Builder.build();
+
+    this.bindingsList = ImmutableList.copyOf(builder.bindingsList);
     this.etag = builder.etag;
     this.version = builder.version;
   }
@@ -321,23 +336,27 @@ public final class Policy implements Serializable {
 
   /** Returns the map of bindings that comprises the policy.
    *
-   * @throws IllegalArgumentException if policy version is equal to 3.
+   * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
    * */
 
   public Map<Role, Set<Identity>> getBindings() {
-    checkArgument(this.version != 3, "removeRole is not supported with version 3 policies.");
-    // Convert to V1 IAM Policy if version is not 3.
+    checkArgument(checkVersion(this.version, this.bindingsList),
+            "getBindings() is only supported with version 1 policies and non-conditional policies");
     ImmutableMap.Builder<Role, Set<Identity>> bindingsV1Builder = ImmutableMap.builder();
-    for (Binding binding : bindingsV3) {
-      bindingsV1Builder.put(binding.getRole(), binding.getIdentities());
+    for (Binding binding : bindingsList) {
+      ImmutableSet.Builder<Identity> identities = ImmutableSet.builder();
+      for (String member : binding.getMembers()) {
+        identities.add(Identity.valueOf(member));
+      }
+      bindingsV1Builder.put(Role.of(binding.getRole()), identities.build());
     }
     return bindingsV1Builder.build();
   }
 
   /** Returns the map of bindings that comprises the policy for version 3. */
 
-  public List<Binding> getBindingsV3() {
-    return bindingsV3;
+  public List<Binding> getBindingsList() {
+    return bindingsList;
   }
 
   /**
@@ -366,7 +385,7 @@ public final class Policy implements Serializable {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-        .add("bindings", bindingsV3)
+        .add("bindings", bindingsList)
         .add("etag", etag)
         .add("version", version)
         .toString();
@@ -374,7 +393,7 @@ public final class Policy implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getClass(), bindingsV3, etag, version);
+    return Objects.hash(getClass(), bindingsList, etag, version);
   }
 
   @Override
@@ -386,8 +405,13 @@ public final class Policy implements Serializable {
       return false;
     }
     Policy other = (Policy) obj;
-    return Objects.equals(bindingsV3, other.getBindings())
-        && Objects.equals(etag, other.getEtag())
+    if (bindingsList.size() != other.getBindingsList().size()) {
+        return false;
+    }
+    for (int i = 0; i < bindingsList.size(); ++i) {
+        bindingsList.get(i).equals(other.getBindingsList().get(i));
+    }
+    return Objects.equals(etag, other.getEtag())
         && Objects.equals(version, other.getVersion());
   }
 
