@@ -19,6 +19,7 @@ package com.google.cloud;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.api.core.ApiFunction;
 import com.google.api.core.InternalApi;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -70,6 +71,21 @@ public final class Policy implements Serializable {
 
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Marshaller() {}
+
+    protected static final ApiFunction<String, Identity> IDENTITY_VALUE_OF_FUNCTION =
+        new ApiFunction<String, Identity>() {
+          @Override
+          public Identity apply(String identityPb) {
+            return Identity.valueOf(identityPb);
+          }
+        };
+    protected static final ApiFunction<Identity, String> IDENTITY_STR_VALUE_FUNCTION =
+        new ApiFunction<Identity, String>() {
+          @Override
+          public String apply(Identity identity) {
+            return identity.strValue();
+          }
+        };
 
     protected abstract Policy fromPb(T policyPb);
 
