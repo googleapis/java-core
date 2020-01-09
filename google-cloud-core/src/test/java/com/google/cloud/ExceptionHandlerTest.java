@@ -17,6 +17,7 @@
 package com.google.cloud;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -27,14 +28,11 @@ import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /** Tests for {@link ExceptionHandler}. */
 public class ExceptionHandlerTest {
-
-  @Rule public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void testVerifyCaller() {
@@ -188,8 +186,12 @@ public class ExceptionHandlerTest {
         };
 
     ExceptionHandler handler = ExceptionHandler.newBuilder().addInterceptors(interceptor).build();
-    thrown.expect(NullPointerException.class);
-    handler.shouldRetry(new Exception(), null);
+    try {
+      handler.shouldRetry(new Exception(), null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      assertNull(ex.getMessage());
+    }
   }
 
   @Test
@@ -210,7 +212,11 @@ public class ExceptionHandlerTest {
         };
 
     ExceptionHandler handler = ExceptionHandler.newBuilder().addInterceptors(interceptor).build();
-    thrown.expect(NullPointerException.class);
-    handler.shouldRetry(new Exception(), null);
+    try {
+      handler.shouldRetry(new Exception(), null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      assertNull(ex.getMessage());
+    }
   }
 }

@@ -21,6 +21,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.google.cloud.spi.ServiceRpcFactory;
@@ -30,10 +31,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.util.Arrays;
 import java.util.Random;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class BaseWriteChannelTest {
 
@@ -59,8 +59,6 @@ public class BaseWriteChannelTest {
   private static final int DEFAULT_CHUNK_SIZE = 60 * MIN_CHUNK_SIZE; // 15MiB
   private static final Random RANDOM = new Random();
   private static BaseWriteChannel channel;
-
-  @Rule public ExpectedException thrown = ExpectedException.none();
 
   @Before
   public void setUp() {
@@ -103,8 +101,12 @@ public class BaseWriteChannelTest {
   @Test
   public void testValidateOpen() throws IOException {
     channel.close();
-    thrown.expect(ClosedChannelException.class);
-    channel.write(ByteBuffer.allocate(42));
+    try {
+      channel.write(ByteBuffer.allocate(42));
+      Assert.fail();
+    } catch (ClosedChannelException ex) {
+      assertNotNull(ex);
+    }
   }
 
   @Test
