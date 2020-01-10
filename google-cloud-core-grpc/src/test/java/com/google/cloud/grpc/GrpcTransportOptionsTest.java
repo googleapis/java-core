@@ -18,6 +18,7 @@ package com.google.cloud.grpc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -63,8 +64,12 @@ public class GrpcTransportOptionsTest {
 
   @Test
   public void testDefaultExecutorFactory() {
-    ExecutorFactory<ScheduledExecutorService> executorFactory = new DefaultExecutorFactory();
+    DefaultExecutorFactory executorFactory = new DefaultExecutorFactory();
     ScheduledExecutorService executorService = executorFactory.get();
     assertSame(executorService, executorFactory.get());
+
+    // releasing should close and clear the cached executor service
+    executorFactory.release(executorService);
+    assertNotSame(executorService, executorFactory.get());
   }
 }
