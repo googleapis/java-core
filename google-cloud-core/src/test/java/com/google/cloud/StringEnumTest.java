@@ -64,14 +64,9 @@ public class StringEnumTest {
     }
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testNullClass() {
-    try {
-      new StringEnumType<Letter>(null, Letter.CONSTRUCTOR);
-      Assert.fail();
-    } catch (NullPointerException ex) {
-      assertNull(ex.getMessage());
-    }
+    new StringEnumType<Letter>(null, Letter.CONSTRUCTOR);
   }
 
   @Test

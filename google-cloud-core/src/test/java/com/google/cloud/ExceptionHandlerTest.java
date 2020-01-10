@@ -17,7 +17,6 @@
 package com.google.cloud;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests for {@link ExceptionHandler}. */
@@ -168,7 +166,7 @@ public class ExceptionHandlerTest {
     assertFalse(handler.shouldRetry(new NullPointerException(), null));
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testNullRetryResultFromBeforeEval() {
     @SuppressWarnings("serial")
     Interceptor interceptor =
@@ -186,15 +184,10 @@ public class ExceptionHandlerTest {
         };
 
     ExceptionHandler handler = ExceptionHandler.newBuilder().addInterceptors(interceptor).build();
-    try {
-      handler.shouldRetry(new Exception(), null);
-      Assert.fail();
-    } catch (NullPointerException ex) {
-      assertNull(ex.getMessage());
-    }
+    handler.shouldRetry(new Exception(), null);
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testNullRetryResultFromAfterEval() {
     @SuppressWarnings("serial")
     Interceptor interceptor =
@@ -212,11 +205,6 @@ public class ExceptionHandlerTest {
         };
 
     ExceptionHandler handler = ExceptionHandler.newBuilder().addInterceptors(interceptor).build();
-    try {
-      handler.shouldRetry(new Exception(), null);
-      Assert.fail();
-    } catch (NullPointerException ex) {
-      assertNull(ex.getMessage());
-    }
+    handler.shouldRetry(new Exception(), null);
   }
 }

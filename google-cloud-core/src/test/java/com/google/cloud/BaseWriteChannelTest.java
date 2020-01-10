@@ -21,7 +21,6 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.google.cloud.spi.ServiceRpcFactory;
@@ -31,7 +30,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.util.Arrays;
 import java.util.Random;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,15 +96,10 @@ public class BaseWriteChannelTest {
     assertNull(channel.getBuffer());
   }
 
-  @Test
+  @Test(expected = ClosedChannelException.class)
   public void testValidateOpen() throws IOException {
     channel.close();
-    try {
-      channel.write(ByteBuffer.allocate(42));
-      Assert.fail();
-    } catch (ClosedChannelException ex) {
-      assertNotNull(ex);
-    }
+    channel.write(ByteBuffer.allocate(42));
   }
 
   @Test

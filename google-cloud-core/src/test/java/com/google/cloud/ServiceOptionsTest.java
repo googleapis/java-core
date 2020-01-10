@@ -48,7 +48,6 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ServiceOptionsTest {
@@ -358,14 +357,9 @@ public class ServiceOptionsTest {
     assertEquals("quota-project-id", OPTIONS.getQuotaProjectId());
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testBuilderNullCredentials() {
-    try {
-      TestServiceOptions.newBuilder().setCredentials(null).build();
-      Assert.fail();
-    } catch (NullPointerException ex) {
-      assertNull(ex.getMessage());
-    }
+    TestServiceOptions.newBuilder().setCredentials(null).build();
   }
 
   @Test
