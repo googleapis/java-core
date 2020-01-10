@@ -95,8 +95,7 @@ public class GrpcTransportOptions implements TransportOptions {
                 service.setRemoveOnCancelPolicy(true);
                 return service;
               }
-            }
-        );
+            });
 
     @Override
     public ScheduledExecutorService get() {
