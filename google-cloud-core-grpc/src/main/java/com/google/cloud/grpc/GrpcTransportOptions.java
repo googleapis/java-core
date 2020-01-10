@@ -31,9 +31,9 @@ import com.google.auth.Credentials;
 import com.google.cloud.NoCredentials;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.TransportOptions;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.grpc.internal.SharedResourceHolder;
-import io.grpc.internal.SharedResourceHolder.Resource;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Objects;
@@ -49,30 +49,6 @@ public class GrpcTransportOptions implements TransportOptions {
   private final String executorFactoryClassName;
 
   private transient ExecutorFactory<ScheduledExecutorService> executorFactory;
-
-  /** Shared thread pool executor. */
-  private static final Resource<ScheduledExecutorService> EXECUTOR =
-      new Resource<ScheduledExecutorService>() {
-        @Override
-        public ScheduledExecutorService create() {
-          ScheduledThreadPoolExecutor service =
-              new ScheduledThreadPoolExecutor(
-                  8,
-                  new ThreadFactoryBuilder()
-                      .setDaemon(true)
-                      .setNameFormat("grpc-transport-%d")
-                      .build());
-          service.setKeepAliveTime(5, TimeUnit.SECONDS);
-          service.allowCoreThreadTimeOut(true);
-          service.setRemoveOnCancelPolicy(true);
-          return service;
-        }
-
-        @Override
-        public void close(ScheduledExecutorService instance) {
-          instance.shutdown();
-        }
-      };
 
   /**
    * An interface for {@link ExecutorService} factories. Implementations of this interface can be
@@ -99,15 +75,45 @@ public class GrpcTransportOptions implements TransportOptions {
   public static class DefaultExecutorFactory implements ExecutorFactory<ScheduledExecutorService> {
 
     private static final DefaultExecutorFactory INSTANCE = new DefaultExecutorFactory();
+    private int referenceCount = 0;
+
+    /** Shared thread pool executor. */
+    private static final Supplier<ScheduledExecutorService> EXECUTOR_SERVICE_SUPPLIER =
+        Suppliers.memoize(
+            new Supplier<ScheduledExecutorService>() {
+              @Override
+              public ScheduledExecutorService get() {
+                ScheduledThreadPoolExecutor service =
+                    new ScheduledThreadPoolExecutor(
+                        8,
+                        new ThreadFactoryBuilder()
+                            .setDaemon(true)
+                            .setNameFormat("grpc-transport-%d")
+                            .build());
+                service.setKeepAliveTime(5, TimeUnit.SECONDS);
+                service.allowCoreThreadTimeOut(true);
+                service.setRemoveOnCancelPolicy(true);
+                return service;
+              }
+            }
+        );
 
     @Override
     public ScheduledExecutorService get() {
-      return SharedResourceHolder.get(EXECUTOR);
+      synchronized (this) {
+        referenceCount++;
+        return EXECUTOR_SERVICE_SUPPLIER.get();
+      }
     }
 
     @Override
     public synchronized void release(ScheduledExecutorService executor) {
-      SharedResourceHolder.release(EXECUTOR, executor);
+      synchronized (this) {
+        referenceCount--;
+        if (referenceCount == 0) {
+          executor.shutdown();
+        }
+      }
     }
   }
 
