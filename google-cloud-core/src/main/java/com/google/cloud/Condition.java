@@ -21,9 +21,15 @@ import javax.annotation.Nullable;
 
 @AutoValue
 abstract class Condition {
-  @Nullable abstract String getTitle();
-  @Nullable abstract String getDescription();
-  @Nullable abstract String getExpression();
+  @Nullable
+  abstract String getTitle();
+
+  @Nullable
+  abstract String getDescription();
+
+  @Nullable
+  abstract String getExpression();
+
   public abstract Builder toBuilder();
 
   static Builder newBuilder() {
@@ -33,8 +39,11 @@ abstract class Condition {
   @AutoValue.Builder
   abstract static class Builder {
     abstract Builder setTitle(String title);
+
     abstract Builder setDescription(String description);
+
     abstract Builder setExpression(String expression);
+
     abstract Condition build();
   }
 }
