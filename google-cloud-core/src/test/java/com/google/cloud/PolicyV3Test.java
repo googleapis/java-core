@@ -168,16 +168,10 @@ public class PolicyV3Test {
   @Test
   public void testIllegalPolicies() {
     try {
-      Binding.newBuilder().setRole(null);
+      Binding.newBuilder().setRole(null).build();
       fail("Null role should cause exception.");
     } catch (NullPointerException ex) {
-      assertEquals("The role cannot be null.", ex.getMessage());
-    }
-    try {
-      Binding.newBuilder().addMembers(null);
-      fail("Null member should cause exception.");
-    } catch (NullPointerException ex) {
-      assertEquals("Null identities are not permitted.", ex.getMessage());
+      assertEquals("Null role", ex.getMessage());
     }
     try {
       FULL_POLICY_V3.getBindings();

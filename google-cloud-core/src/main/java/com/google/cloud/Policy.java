@@ -153,7 +153,7 @@ public final class Policy implements Serializable {
 
   /** A builder for {@code Policy} objects. */
   public static class Builder {
-    private final List<Binding> bindingsList = new ArrayList();
+    private final List<Binding> bindingsList = new ArrayList<Binding>();
     private String etag;
     private int version;
 
@@ -162,7 +162,9 @@ public final class Policy implements Serializable {
 
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Builder(Policy policy) {
-      setBindings(policy.bindingsList);
+      for (Binding binding : policy.bindingsList) {
+        bindingsList.add(binding.toBuilder().build());
+      }
       setEtag(policy.etag);
       setVersion(policy.version);
     }
@@ -214,7 +216,7 @@ public final class Policy implements Serializable {
       this.bindingsList.clear();
       for (Binding binding : bindings) {
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.setMembers(new ArrayList<String>(binding.getMembers()));
+        bindingBuilder.setMembers(ImmutableList.copyOf(binding.getMembers()));
         bindingBuilder.setRole(binding.getRole());
         bindingBuilder.setCondition(binding.getCondition());
         this.bindingsList.add(bindingBuilder.build());
@@ -230,7 +232,6 @@ public final class Policy implements Serializable {
       for (int i = 0; i < bindingsList.size(); ++i) {
         Binding binding = bindingsList.get(i);
         if (binding.getRole().equals(role.getValue())) {
-          System.out.println(role.getValue() + " " + binding.getRole());
           bindingsList.remove(i);
           return this;
         }
@@ -263,12 +264,12 @@ public final class Policy implements Serializable {
           return this;
         }
       }
-      List<String> members = new ArrayList<>();
-      members.add(first.strValue());
+      Binding.Builder bindingBuilder = Binding.newBuilder().setRole(role.getValue());
+      bindingBuilder.addMembers(first.strValue());
       for (Identity identity : others) {
-        members.add(identity.strValue());
+        bindingBuilder.addMembers(identity.strValue());
       }
-      bindingsList.add(Binding.newBuilder().setRole(role.getValue()).setMembers(members).build());
+      bindingsList.add(bindingBuilder.build());
       return this;
     }
 
