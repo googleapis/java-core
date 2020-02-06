@@ -20,30 +20,30 @@ import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
 
 @AutoValue
-abstract class Condition {
+public abstract class Condition {
   @Nullable
-  abstract String getTitle();
+  public abstract String getTitle();
 
   @Nullable
-  abstract String getDescription();
+  public abstract String getDescription();
 
   @Nullable
-  abstract String getExpression();
+  public abstract String getExpression();
 
   public abstract Builder toBuilder();
 
-  static Builder newBuilder() {
+  public static Builder newBuilder() {
     return new AutoValue_Condition.Builder();
   }
 
   @AutoValue.Builder
-  abstract static class Builder {
-    abstract Builder setTitle(String title);
+  public abstract static class Builder {
+    public abstract Builder setTitle(String title);
 
-    abstract Builder setDescription(String description);
+    public abstract Builder setDescription(String description);
 
-    abstract Builder setExpression(String expression);
+    public abstract Builder setExpression(String expression);
 
-    abstract Condition build();
+    public abstract Condition build();
   }
 }

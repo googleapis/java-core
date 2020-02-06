@@ -25,36 +25,35 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 @AutoValue
-abstract class Binding {
-  abstract String getRole();
+public abstract class Binding {
+  public abstract String getRole();
 
-  abstract ImmutableList<String> getMembers();
+  public abstract ImmutableList<String> getMembers();
 
   @Nullable
-  abstract Condition getCondition();
+  public abstract Condition getCondition();
 
   public abstract Builder toBuilder();
 
-  static Builder newBuilder() {
+  public static Builder newBuilder() {
     return new AutoValue_Binding.Builder();
   }
 
   @AutoValue.Builder
-  abstract static class Builder {
-    abstract Builder setRole(String role);
+  public abstract static class Builder {
+    public abstract Builder setRole(String role);
 
-    abstract Builder setMembers(List<String> members);
+    public abstract Builder setMembers(List<String> members);
 
-    abstract Builder setCondition(Condition condition);
+    public abstract Builder setCondition(Condition condition);
 
-    abstract String getRole();
+    public abstract String getRole();
 
-    abstract ImmutableList<String> getMembers();
+    public abstract ImmutableList<String> getMembers();
 
-    abstract Condition getCondition();
+    public abstract Condition getCondition();
 
     public abstract ImmutableList.Builder<String> membersBuilder();
-    // public abstract Condition.Builder conditionBuilder();
 
     public Builder addMembers(String... members) {
       for (String member : members) {
@@ -71,6 +70,6 @@ abstract class Binding {
       return this;
     }
 
-    abstract Binding build();
+    public abstract Binding build();
   }
 }

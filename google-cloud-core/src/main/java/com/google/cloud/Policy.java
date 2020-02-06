@@ -52,19 +52,19 @@ public final class Policy implements Serializable {
   private final int version;
 
   /*
-   * Return false if Policy is version 3 OR bindings has a conditional binding.
-   * Return true if Policy is version 1 AND bindings does not have a conditional binding.
+   * Return true if Policy is version 3 OR bindings has a conditional binding.
+   * Return false if Policy is version 1 AND bindings does not have a conditional binding.
    */
-  private static boolean checkVersion(int version, List<Binding> bindingsList) {
+  private static boolean isConditional(int version, List<Binding> bindingsList) {
     for (Binding binding : bindingsList) {
       if (binding.getCondition() != null) {
-        return false;
+        return true;
       }
     }
     if (version > 1) {
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public abstract static class Marshaller<T> {
@@ -178,8 +178,7 @@ public final class Policy implements Serializable {
      */
     public final Builder setBindings(Map<Role, Set<Identity>> bindings) {
       checkNotNull(bindings, "The provided map of bindings cannot be null.");
-      checkArgument(
-          checkVersion(this.version, this.bindingsList),
+      checkArgument(!isConditional(this.version, this.bindingsList),
           "setBindings() is only supported with version 1 policies and non-conditional policies");
       for (Map.Entry<Role, Set<Identity>> binding : bindings.entrySet()) {
         checkNotNull(binding.getKey(), "The role cannot be null.");
@@ -226,8 +225,7 @@ public final class Policy implements Serializable {
 
     /** Removes the role (and all identities associated with that role) from the policy. */
     public final Builder removeRole(Role role) {
-      checkArgument(
-          checkVersion(this.version, this.bindingsList),
+      checkArgument(!isConditional(this.version, this.bindingsList),
           "removeRole() is only supported with version 1 policies and non-conditional policies");
       for (int i = 0; i < bindingsList.size(); ++i) {
         Binding binding = bindingsList.get(i);
@@ -246,8 +244,7 @@ public final class Policy implements Serializable {
      * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
      */
     public final Builder addIdentity(Role role, Identity first, Identity... others) {
-      checkArgument(
-          checkVersion(this.version, this.bindingsList),
+      checkArgument(!isConditional(this.version, this.bindingsList),
           "addIdentity() is only supported with version 1 policies and non-conditional policies");
       String nullIdentityMessage = "Null identities are not permitted.";
       checkNotNull(first, nullIdentityMessage);
@@ -280,8 +277,7 @@ public final class Policy implements Serializable {
      * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
      */
     public final Builder removeIdentity(Role role, Identity first, Identity... others) {
-      checkArgument(
-          checkVersion(this.version, this.bindingsList),
+      checkArgument(!isConditional(this.version, this.bindingsList),
           "removeIdentity() is only supported with version 1 policies and non-conditional policies");
       String nullIdentityMessage = "Null identities are not permitted.";
       checkNotNull(first, nullIdentityMessage);
@@ -323,10 +319,11 @@ public final class Policy implements Serializable {
     }
 
     /**
-     * Sets the version of the policy. The default version is 0, meaning only the "owner", "editor",
-     * and "viewer" roles are permitted. If the version is 1, you may also use other roles.
+     * Sets the version of the policy.
      */
     public final Builder setVersion(int version) {
+      //checkArgument(version==1 && !isConditional(version, this.bindingsList),
+      //        "Version 3 is required for conditional policies.");
       this.version = version;
       return this;
     }
@@ -338,7 +335,6 @@ public final class Policy implements Serializable {
   }
 
   private Policy(Builder builder) {
-
     this.bindingsList = ImmutableList.copyOf(builder.bindingsList);
     this.etag = builder.etag;
     this.version = builder.version;
@@ -355,8 +351,7 @@ public final class Policy implements Serializable {
    * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
    */
   public Map<Role, Set<Identity>> getBindings() {
-    checkArgument(
-        checkVersion(this.version, this.bindingsList),
+    checkArgument(!isConditional(this.version, this.bindingsList),
         "getBindings() is only supported with version 1 policies and non-conditional policies");
     ImmutableMap.Builder<Role, Set<Identity>> bindingsV1Builder = ImmutableMap.builder();
     for (Binding binding : bindingsList) {
