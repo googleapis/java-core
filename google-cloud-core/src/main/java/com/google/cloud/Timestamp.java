@@ -119,7 +119,13 @@ public final class Timestamp implements Comparable<Timestamp>, Serializable {
    * @throws IllegalArgumentException if the timestamp is outside the representable range
    */
   public static Timestamp of(java.sql.Timestamp timestamp) {
-    return ofTimeSecondsAndNanos(timestamp.getTime() / 1000, timestamp.getNanos());
+    // TODO: replace with Math.floorDiv when we drop Java 7 support
+    long secs = timestamp.getTime() / 1000;
+    int nanos = timestamp.getNanos();
+    if (secs < 0) {
+      --secs;
+    }
+    return Timestamp.ofTimeSecondsAndNanos(secs, nanos);
   }
 
   /**
