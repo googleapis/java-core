@@ -96,7 +96,7 @@ public final class Policy implements Serializable {
 
     @Override
     protected Policy fromPb(com.google.iam.v1.Policy policyPb) {
-      List<Binding> bindingsList = new ArrayList<Binding>();
+      ImmutableList.Builder<Binding> bindingsListBuilder = ImmutableList.builder();
       for (com.google.iam.v1.Binding bindingPb : policyPb.getBindingsList()) {
         Binding.Builder convertedBinding =
             Binding.newBuilder()
@@ -111,10 +111,10 @@ public final class Policy implements Serializable {
                   .setExpression(expr.getExpression())
                   .build());
         }
-        bindingsList.add(convertedBinding.build());
+        bindingsListBuilder.add(convertedBinding.build());
       }
       return newBuilder()
-          .setBindings(bindingsList)
+          .setBindings(bindingsListBuilder.build())
           .setEtag(
               policyPb.getEtag().isEmpty()
                   ? null
