@@ -82,26 +82,26 @@ public class TimestampTest {
 
   @Test
   public void ofSqlTimestamp() {
-    String expectedTimestamp = "1970-01-01T00:00:12.345000000Z";
+    String expectedTimestampString = "1970-01-01T00:00:12.345000000Z";
     java.sql.Timestamp input = new java.sql.Timestamp(12345);
     Timestamp timestamp = Timestamp.of(input);
-    assertThat(timestamp.toString()).isEqualTo(expectedTimestamp);
+    assertThat(timestamp.toString()).isEqualTo(expectedTimestampString);
   }
 
   @Test
   public void ofSqlTimestampPreEpoch() {
-    String expectedTimestamp = "1969-12-31T23:59:47.655000000Z";
+    String expectedTimestampString = "1969-12-31T23:59:47.655000000Z";
     java.sql.Timestamp input = new java.sql.Timestamp(-12345);
     Timestamp timestamp = Timestamp.of(input);
-    assertThat(timestamp.toString()).isEqualTo(expectedTimestamp);
+    assertThat(timestamp.toString()).isEqualTo(expectedTimestampString);
   }
 
   @Test
   public void ofSqlTimestampOnEpoch() {
-    String expectedTimestamp = "1970-01-01T00:00:00Z";
+    String expectedTimestampString = "1970-01-01T00:00:00Z";
     java.sql.Timestamp input = new java.sql.Timestamp(0);
     Timestamp timestamp = Timestamp.of(input);
-    assertThat(timestamp.toString()).isEqualTo(expectedTimestamp);
+    assertThat(timestamp.toString()).isEqualTo(expectedTimestampString);
   }
 
   @Test
