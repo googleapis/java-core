@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-core-bom</artifactId>
-  <version>1.92.5</version><!-- {x-version-update:google-cloud-core:current} -->
+  <version>1.92.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
   <packaging>pom</packaging>
   <parent>
     <groupId>com.google.cloud</groupId>
@@ -12,7 +12,7 @@
   </parent>
 
   <name>Google Cloud Core</name>
-  <url>https://github.com/googleapis/java-core/tree/master/google-cloud-core-bom</url>
+  <url>https://github.com/googleapis/java-core</url>
   <description>
     BOM for Google Cloud Core
   </description>
@@ -63,17 +63,17 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-core</artifactId>
-        <version>1.92.5</version><!-- {x-version-update:google-cloud-core:current} -->
+        <version>1.92.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-core-grpc</artifactId>
-        <version>1.92.5</version><!-- {x-version-update:google-cloud-core:current} -->
+        <version>1.92.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-core-http</artifactId>
-        <version>1.92.5</version><!-- {x-version-update:google-cloud-core:current} -->
+        <version>1.92.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>
