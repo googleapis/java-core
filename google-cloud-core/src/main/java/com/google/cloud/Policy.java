@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.api.core.ApiFunction;
 import com.google.api.core.InternalApi;
+import com.google.api.gax.retrying.RetrySettings;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +31,7 @@ import com.google.protobuf.ByteString;
 import com.google.type.Expr;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +63,7 @@ public final class Policy implements Serializable {
         return true;
       }
     }
-    if (version > 1) {
+    if (version == 3) {
       return true;
     }
     return false;
@@ -229,10 +231,13 @@ public final class Policy implements Serializable {
       checkArgument(
           !isConditional(this.version, this.bindingsList),
           "removeRole() is only supported with version 1 policies and non-conditional policies");
-      for (int i = 0; i < bindingsList.size(); ++i) {
-        Binding binding = bindingsList.get(i);
+      Iterator iterator = bindingsList.iterator();
+
+      while (iterator.hasNext())
+      {
+        Binding binding = (Binding)iterator.next();
         if (binding.getRole().equals(role.getValue())) {
-          bindingsList.remove(i);
+          iterator.remove();
           return this;
         }
       }
@@ -295,14 +300,21 @@ public final class Policy implements Serializable {
             bindingBuilder.removeMembers(identity.strValue());
           }
           Binding updatedBindings = bindingBuilder.build();
-          if (updatedBindings.getMembers().size() == 0) {
-            bindingsList.remove(i);
-          } else {
-            bindingsList.set(i, updatedBindings);
-          }
-          return this;
+          bindingsList.set(i, updatedBindings);
+          break;
         }
       }
+
+      Iterator iterator = bindingsList.iterator();
+      while (iterator.hasNext())
+      {
+        Binding binding = (Binding)iterator.next();
+        if (binding.getRole().equals(role.getValue()) && binding.getMembers().size() == 0) {
+          iterator.remove();
+          break;
+        }
+      }
+
       return this;
     }
 

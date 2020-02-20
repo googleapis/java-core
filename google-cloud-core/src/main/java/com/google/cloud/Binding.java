@@ -17,10 +17,12 @@
 package com.google.cloud;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -63,10 +65,9 @@ public abstract class Binding {
     }
 
     public Builder removeMembers(String... members) {
-      setMembers(
-          ImmutableList.copyOf(
-              Collections2.filter(
-                  getMembers(), Predicates.not(Predicates.in(Arrays.asList(members))))));
+      Predicate<String> selectMembersNotInList = Predicates.not(Predicates.in(Arrays.asList(members)));
+      Collection<String> filter = Collections2.filter(getMembers(), selectMembersNotInList);
+      setMembers(ImmutableList.copyOf(filter));
       return this;
     }
 
