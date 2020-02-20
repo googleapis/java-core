@@ -65,7 +65,8 @@ public abstract class Binding {
     }
 
     public Builder removeMembers(String... members) {
-      Predicate<String> selectMembersNotInList = Predicates.not(Predicates.in(Arrays.asList(members)));
+      Predicate<String> selectMembersNotInList =
+          Predicates.not(Predicates.in(Arrays.asList(members)));
       Collection<String> filter = Collections2.filter(getMembers(), selectMembersNotInList);
       setMembers(ImmutableList.copyOf(filter));
       return this;

@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.api.core.ApiFunction;
 import com.google.api.core.InternalApi;
-import com.google.api.gax.retrying.RetrySettings;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -233,9 +232,8 @@ public final class Policy implements Serializable {
           "removeRole() is only supported with version 1 policies and non-conditional policies");
       Iterator iterator = bindingsList.iterator();
 
-      while (iterator.hasNext())
-      {
-        Binding binding = (Binding)iterator.next();
+      while (iterator.hasNext()) {
+        Binding binding = (Binding) iterator.next();
         if (binding.getRole().equals(role.getValue())) {
           iterator.remove();
           return this;
@@ -306,9 +304,8 @@ public final class Policy implements Serializable {
       }
 
       Iterator iterator = bindingsList.iterator();
-      while (iterator.hasNext())
-      {
-        Binding binding = (Binding)iterator.next();
+      while (iterator.hasNext()) {
+        Binding binding = (Binding) iterator.next();
         if (binding.getRole().equals(role.getValue()) && binding.getMembers().size() == 0) {
           iterator.remove();
           break;
