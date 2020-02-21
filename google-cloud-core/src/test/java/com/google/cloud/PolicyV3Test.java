@@ -143,6 +143,7 @@ public class PolicyV3Test {
     }
 
     Policy updatedPolicy = FULL_POLICY_V3.toBuilder().setBindings(bindings).build();
+    System.out.println(updatedPolicy.getBindingsList());
     assertEquals(4, updatedPolicy.getBindingsList().get(0).getMembers().size());
   }
 
@@ -168,7 +169,7 @@ public class PolicyV3Test {
   public void addBindingToPolicy() {
     assertEquals(2, FULL_POLICY_V3.getBindingsList().size());
     List<Binding> bindings = new ArrayList<>(FULL_POLICY_V3.getBindingsList());
-    bindings.add(Binding.newBuilder().setRole(OWNER).addMembers(USER).build());
+    bindings.add(Binding.newBuilder().setRole(OWNER).setMembers(ImmutableList.of(USER)).build());
     Policy updatedPolicy = FULL_POLICY_V3.toBuilder().setBindings(bindings).build();
     assertEquals(3, updatedPolicy.getBindingsList().size());
   }
@@ -194,16 +195,6 @@ public class PolicyV3Test {
       fail("Null member should cause exception.");
     } catch (NullPointerException ex) {
       assertEquals("at index 0", ex.getMessage());
-    }
-    try {
-      FULL_POLICY_V3
-          .toBuilder()
-          .setBindings(
-              Arrays.asList(Binding.newBuilder().setRole("test").addMembers(null, "user").build()))
-          .build();
-      fail("Null member should cause exception.");
-    } catch (NullPointerException ex) {
-      assertNull(ex.getMessage());
     }
     try {
       FULL_POLICY_V3.getBindings();

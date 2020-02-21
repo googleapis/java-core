@@ -193,9 +193,11 @@ public final class Policy implements Serializable {
       for (Map.Entry<Role, Set<Identity>> binding : bindings.entrySet()) {
         Binding.Builder bindingBuilder = Binding.newBuilder();
         bindingBuilder.setRole(binding.getKey().getValue());
+        ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
         for (Identity identity : binding.getValue()) {
-          bindingBuilder.addMembers(identity.strValue());
+          membersBuilder.add(identity.strValue());
         }
+        bindingBuilder.setMembers(membersBuilder.build());
         this.bindingsList.add(bindingBuilder.build());
       }
       return this;
@@ -253,19 +255,26 @@ public final class Policy implements Serializable {
       for (int i = 0; i < bindingsList.size(); i++) {
         Binding binding = bindingsList.get(i);
         if (binding.getRole().equals(role.getValue())) {
-          Binding.Builder bindingBuilder = binding.toBuilder().addMembers(first.strValue());
+          Binding.Builder bindingBuilder = binding.toBuilder();
+          ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
+          membersBuilder.addAll(binding.getMembers());
+          membersBuilder.add(first.strValue());
           for (Identity identity : others) {
-            bindingBuilder.addMembers(identity.strValue());
+            membersBuilder.add(identity.strValue());
           }
+          bindingBuilder.setMembers(membersBuilder.build());
           bindingsList.set(i, bindingBuilder.build());
           return this;
         }
       }
+      // Binding does not yet exist.
       Binding.Builder bindingBuilder = Binding.newBuilder().setRole(role.getValue());
-      bindingBuilder.addMembers(first.strValue());
+      ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
+      membersBuilder.add(first.strValue());
       for (Identity identity : others) {
-        bindingBuilder.addMembers(identity.strValue());
+        membersBuilder.add(identity.strValue());
       }
+      bindingBuilder.setMembers(membersBuilder.build());
       bindingsList.add(bindingBuilder.build());
       return this;
     }

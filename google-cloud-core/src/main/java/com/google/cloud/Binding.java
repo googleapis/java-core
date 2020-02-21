@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public abstract class Binding {
   public abstract String getRole();
 
-  public abstract ImmutableList<String> getMembers();
+  public abstract List<String> getMembers();
 
   @Nullable
   public abstract Condition getCondition();
@@ -51,19 +51,22 @@ public abstract class Binding {
 
     public abstract String getRole();
 
-    public abstract ImmutableList<String> getMembers();
+    public abstract List<String> getMembers();
 
     public abstract Condition getCondition();
 
-    public abstract ImmutableList.Builder<String> membersBuilder();
-
+    // Members property must be initialized before this method can be used.
     public Builder addMembers(String... members) {
+      ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
+      membersBuilder.addAll(getMembers());
       for (String member : members) {
-        membersBuilder().add(member);
+        membersBuilder.add(member);
       }
+      setMembers(membersBuilder.build());
       return this;
     }
 
+    // Members property must be initialized before this method can be used.
     public Builder removeMembers(String... members) {
       Predicate<String> selectMembersNotInList =
           Predicates.not(Predicates.in(Arrays.asList(members)));
