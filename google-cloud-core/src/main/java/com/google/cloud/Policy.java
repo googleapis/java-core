@@ -204,15 +204,16 @@ public final class Policy implements Serializable {
     /**
      * Replaces the builder's List of bindings with the given List of Bindings.
      *
-     * @throws NullPointerException if the given list is null, role is null, or contains any null members in
-     *     bindings.
+     * @throws NullPointerException if the given list is null, role is null, or contains any null
+     *     members in bindings.
      */
     public final Builder setBindings(List<Binding> bindings) {
       this.bindingsList.clear();
       for (Binding binding : bindings) {
         checkNotNull(binding.getRole(), "The role cannot be null.");
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.addMembers(binding.getMembers().toArray(new String[binding.getMembers().size()]));
+        bindingBuilder.addMembers(
+            binding.getMembers().toArray(new String[binding.getMembers().size()]));
         bindingBuilder.setRole(binding.getRole());
         bindingBuilder.setCondition(binding.getCondition());
         this.bindingsList.add(bindingBuilder.build());
