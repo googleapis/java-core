@@ -210,10 +210,8 @@ public final class Policy implements Serializable {
     public final Builder setBindings(List<Binding> bindings) {
       this.bindingsList.clear();
       for (Binding binding : bindings) {
-        checkNotNull(binding.getRole(), "The role cannot be null.");
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.addMembers(
-            binding.getMembers().toArray(new String[binding.getMembers().size()]));
+        bindingBuilder.setMembers(ImmutableList.copyOf(binding.getMembers()));
         bindingBuilder.setRole(binding.getRole());
         bindingBuilder.setCondition(binding.getCondition());
         this.bindingsList.add(bindingBuilder.build());
