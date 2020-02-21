@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @AutoValue
 public abstract class Binding {
   public abstract String getRole();
@@ -59,7 +61,6 @@ public abstract class Binding {
 
     public Builder addMembers(String... members) {
       for (String member : members) {
-
         membersBuilder().add(member);
       }
       return this;

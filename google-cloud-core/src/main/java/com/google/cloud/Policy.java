@@ -204,21 +204,15 @@ public final class Policy implements Serializable {
     /**
      * Replaces the builder's List of bindings with the given List of Bindings.
      *
-     * @throws NullPointerException if the given list is null or contains any null members in
+     * @throws NullPointerException if the given list is null, role is null, or contains any null members in
      *     bindings.
-     * @throws IllegalArgumentException if any identities in the given map are null
      */
     public final Builder setBindings(List<Binding> bindings) {
-      for (Binding binding : bindings) {
-        checkNotNull(binding.getRole(), "The role cannot be null.");
-        List<String> members = binding.getMembers();
-        checkNotNull(members, "A role cannot be assigned to a null set of identities.");
-        checkArgument(!members.contains(null), "Null identities are not permitted.");
-      }
       this.bindingsList.clear();
       for (Binding binding : bindings) {
+        checkNotNull(binding.getRole(), "The role cannot be null.");
         Binding.Builder bindingBuilder = Binding.newBuilder();
-        bindingBuilder.setMembers(ImmutableList.copyOf(binding.getMembers()));
+        bindingBuilder.addMembers(binding.getMembers().toArray(new String[binding.getMembers().size()]));
         bindingBuilder.setRole(binding.getRole());
         bindingBuilder.setCondition(binding.getCondition());
         this.bindingsList.add(bindingBuilder.build());

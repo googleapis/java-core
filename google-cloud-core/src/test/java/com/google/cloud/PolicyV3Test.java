@@ -25,7 +25,10 @@ import static org.junit.Assert.fail;
 
 import com.google.cloud.Policy.DefaultMarshaller;
 import com.google.common.collect.ImmutableList;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
@@ -179,6 +182,18 @@ public class PolicyV3Test {
       fail("Null role should cause exception.");
     } catch (NullPointerException ex) {
       assertEquals("Null role", ex.getMessage());
+    }
+    try {
+      FULL_POLICY_V3.toBuilder().setBindings(Arrays.asList(Binding.newBuilder().setRole("test").setMembers(Arrays.asList(null, "user")).build())).build();
+      fail("Null member should cause exception.");
+    } catch (NullPointerException ex) {
+      assertEquals("at index 0", ex.getMessage());
+    }
+    try {
+      FULL_POLICY_V3.toBuilder().setBindings(Arrays.asList(Binding.newBuilder().setRole("test").addMembers(null, "user").build())).build();
+      fail("Null member should cause exception.");
+    } catch (NullPointerException ex) {
+      assertNull(ex.getMessage());
     }
     try {
       FULL_POLICY_V3.getBindings();
