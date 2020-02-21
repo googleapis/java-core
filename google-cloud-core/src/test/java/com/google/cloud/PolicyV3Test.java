@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
 import com.google.cloud.Policy.DefaultMarshaller;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 
@@ -116,7 +117,7 @@ public class PolicyV3Test {
     assertEquals(3, FULL_POLICY_V3.getBindingsList().get(0).getMembers().size());
     List<Binding> bindings = new ArrayList<>(FULL_POLICY_V3.getBindingsList());
 
-    for (int i = 0; i < bindings.size(); ++i) {
+    for (int i = 0; i < bindings.size(); i++) {
       Binding binding = bindings.get(i);
       if (binding.getRole().equals(VIEWER)) {
         bindings.set(i, binding.toBuilder().removeMembers(ALL_USERS).build());
@@ -133,7 +134,7 @@ public class PolicyV3Test {
     assertEquals(3, FULL_POLICY_V3.getBindingsList().get(0).getMembers().size());
     List<Binding> bindings = new ArrayList<>(FULL_POLICY_V3.getBindingsList());
 
-    for (int i = 0; i < bindings.size(); ++i) {
+    for (int i = 0; i < bindings.size(); i++) {
       Binding binding = bindings.get(i);
       if (binding.getRole().equals(VIEWER)) {
         bindings.set(i, binding.toBuilder().addMembers("user:example@example.com").build());
@@ -149,10 +150,11 @@ public class PolicyV3Test {
     assertEquals(2, FULL_POLICY_V3.getBindingsList().size());
     List<Binding> bindings = new ArrayList<>(FULL_POLICY_V3.getBindingsList());
 
-    for (int i = 0; i < bindings.size(); ++i) {
-      Binding binding = bindings.get(i);
+    Iterator iterator = bindings.iterator();
+    while (iterator.hasNext()) {
+      Binding binding = (Binding) iterator.next();
       if (binding.getRole().equals(EDITOR) && binding.getCondition() == null) {
-        bindings.remove(i);
+        iterator.remove();
         break;
       }
     }

@@ -59,6 +59,7 @@ public abstract class Binding {
 
     public Builder addMembers(String... members) {
       for (String member : members) {
+
         membersBuilder().add(member);
       }
       return this;

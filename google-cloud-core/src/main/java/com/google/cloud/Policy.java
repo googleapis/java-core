@@ -39,7 +39,7 @@ import java.util.Set;
 
 /**
  * Class for Identity and Access Management (IAM) policies. IAM policies are used to specify access
- * settings for Cloud Platform resources. A policy is a map of bindings. A binding assigns a set of
+ * settings for Cloud Platform resources. A policy is a list of bindings. A binding assigns a set of
  * identities to a role, where the identities can be user accounts, Google groups, Google domains,
  * and service accounts. A role is a named list of permissions defined by IAM.
  *
@@ -174,8 +174,8 @@ public final class Policy implements Serializable {
      * Replaces the builder's map of bindings with the given map of bindings.
      *
      * @throws NullPointerException if the given map is null or contains any null keys or values
-     * @throws IllegalArgumentException if any identities in the given map are null
-     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
+     * @throws IllegalArgumentException if any identities in the given map are null or if policy
+     *     version is equal to 3 or has conditional bindings.
      */
     public final Builder setBindings(Map<Role, Set<Identity>> bindings) {
       checkNotNull(bindings, "The provided map of bindings cannot be null.");
@@ -204,7 +204,8 @@ public final class Policy implements Serializable {
     /**
      * Replaces the builder's List of bindings with the given List of Bindings.
      *
-     * @throws NullPointerException if the given map is null or contains any null keys or values
+     * @throws NullPointerException if the given list is null or contains any null members in
+     *     bindings.
      * @throws IllegalArgumentException if any identities in the given map are null
      */
     public final Builder setBindings(List<Binding> bindings) {
@@ -256,7 +257,7 @@ public final class Policy implements Serializable {
       checkNotNull(first, nullIdentityMessage);
       checkNotNull(others, nullIdentityMessage);
       checkNotNull(role, "The role cannot be null.");
-      for (int i = 0; i < bindingsList.size(); ++i) {
+      for (int i = 0; i < bindingsList.size(); i++) {
         Binding binding = bindingsList.get(i);
         if (binding.getRole().equals(role.getValue())) {
           Binding.Builder bindingBuilder = binding.toBuilder().addMembers(first.strValue());
@@ -290,7 +291,7 @@ public final class Policy implements Serializable {
       checkNotNull(first, nullIdentityMessage);
       checkNotNull(others, nullIdentityMessage);
       checkNotNull(role, "The role cannot be null.");
-      for (int i = 0; i < bindingsList.size(); ++i) {
+      for (int i = 0; i < bindingsList.size(); i++) {
         Binding binding = bindingsList.get(i);
         if (binding.getRole().equals(role.getValue())) {
           Binding.Builder bindingBuilder = binding.toBuilder().removeMembers(first.strValue());
@@ -374,7 +375,7 @@ public final class Policy implements Serializable {
     return bindingsV1Builder.build();
   }
 
-  /** Returns the map of bindings that comprises the policy for version 3. */
+  /** Returns the list of bindings that comprises the policy for version 3. */
   public List<Binding> getBindingsList() {
     return bindingsList;
   }
@@ -428,7 +429,7 @@ public final class Policy implements Serializable {
     if (bindingsList.size() != other.getBindingsList().size()) {
       return false;
     }
-    for (int i = 0; i < bindingsList.size(); ++i) {
+    for (int i = 0; i < bindingsList.size(); i++) {
       bindingsList.get(i).equals(other.getBindingsList().get(i));
     }
     return Objects.equals(etag, other.getEtag()) && Objects.equals(version, other.getVersion());
