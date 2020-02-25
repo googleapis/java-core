@@ -143,7 +143,6 @@ public class PolicyV3Test {
     }
 
     Policy updatedPolicy = FULL_POLICY_V3.toBuilder().setBindings(bindings).build();
-    System.out.println(updatedPolicy.getBindingsList());
     assertEquals(4, updatedPolicy.getBindingsList().get(0).getMembers().size());
   }
 
