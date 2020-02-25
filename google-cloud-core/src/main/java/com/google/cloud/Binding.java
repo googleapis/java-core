@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 public abstract class Binding {
   public abstract String getRole();
 
-  public abstract List<String> getMembers();
+  public abstract ImmutableList<String> getMembers();
 
   @Nullable
   public abstract Condition getCondition();
@@ -53,7 +53,7 @@ public abstract class Binding {
 
     public abstract String getRole();
 
-    public abstract List<String> getMembers();
+    public abstract ImmutableList<String> getMembers();
 
     public abstract Condition getCondition();
 
