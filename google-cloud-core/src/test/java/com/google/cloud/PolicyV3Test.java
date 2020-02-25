@@ -82,7 +82,7 @@ public class PolicyV3Test {
           .build();
 
   @Test
-  public void testBuilder() {
+  public void testBuilderV1() {
     assertEquals(BINDINGS_NO_CONDITIONS, FULL_POLICY_V1.getBindingsList());
     assertEquals(1, FULL_POLICY_V1.getVersion());
     assertEquals("etag", FULL_POLICY_V1.getEtag());
@@ -90,19 +90,25 @@ public class PolicyV3Test {
     assertEquals(BINDINGS_NO_CONDITIONS, policy.getBindingsList());
     assertEquals("etag", policy.getEtag());
     assertEquals(1, policy.getVersion());
+  }
 
+  @Test
+  public void testBuilderV3WithConditions() {
     assertEquals(BINDINGS_WITH_CONDITIONS, FULL_POLICY_V3.getBindingsList());
     assertEquals(3, FULL_POLICY_V3.getVersion());
     assertEquals("etag", FULL_POLICY_V3.getEtag());
-    policy = FULL_POLICY_V3.toBuilder().setBindings(BINDINGS_WITH_CONDITIONS).build();
+    Policy policy = FULL_POLICY_V3.toBuilder().setBindings(BINDINGS_WITH_CONDITIONS).build();
     assertEquals(BINDINGS_WITH_CONDITIONS, policy.getBindingsList());
     assertEquals("etag", policy.getEtag());
     assertEquals(3, policy.getVersion());
+  }
 
+  @Test
+  public void testBuilderV1ToV3Compatability() {
     assertEquals(BINDINGS_WITH_CONDITIONS, FULL_POLICY_V3_WITH_VERSION_1.getBindingsList());
     assertEquals(1, FULL_POLICY_V3_WITH_VERSION_1.getVersion());
     assertEquals("etag", FULL_POLICY_V3_WITH_VERSION_1.getEtag());
-    policy =
+    Policy policy =
         FULL_POLICY_V3_WITH_VERSION_1
             .toBuilder()
             .setBindings(BINDINGS_WITH_CONDITIONS)
