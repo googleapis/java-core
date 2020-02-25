@@ -16,11 +16,11 @@
 
 package com.google.cloud;
 
+import com.google.api.core.BetaApi;
 import com.google.auto.value.AutoValue;
-import com.google.common.annotations.Beta;
 import javax.annotation.Nullable;
 
-@Beta
+@BetaApi("This is a Beta API is not stable yet and may change in the future.")
 @AutoValue
 public abstract class Condition {
   @Nullable
