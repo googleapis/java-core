@@ -16,8 +16,8 @@
 
 package com.google.cloud;
 
-import com.google.api.core.BetaApi;
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.Beta;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
-@BetaApi
+@Beta
 @AutoValue
 public abstract class Binding {
   public abstract String getRole();
