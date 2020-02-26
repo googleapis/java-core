@@ -435,7 +435,7 @@ public final class Policy implements Serializable {
     if (!bindingsList.equals(other.getBindingsList())) {
       return false;
     }
-    return Objects.equals(etag, other.getEtag()) && Objects.equals(version, other.getVersion());
+    return Objects.equals(etag, other.getEtag()) && version == other.getVersion();
   }
 
   /** Returns a builder for {@code Policy} objects. */
