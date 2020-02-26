@@ -16,12 +16,15 @@
 
 package com.google.cloud;
 
+import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Predicates.not;
+
 import com.google.api.core.BetaApi;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -40,7 +43,8 @@ public abstract class Binding {
   public abstract Builder toBuilder();
 
   public static Builder newBuilder() {
-    return new AutoValue_Binding.Builder();
+    List<String> emptyMembers = ImmutableList.of();
+    return new AutoValue_Binding.Builder().setMembers(emptyMembers);
   }
 
   @AutoValue.Builder
@@ -51,27 +55,20 @@ public abstract class Binding {
 
     public abstract Builder setCondition(Condition condition);
 
-    public abstract String getRole();
-
-    public abstract ImmutableList<String> getMembers();
-
-    public abstract Condition getCondition();
+    abstract ImmutableList<String> getMembers();
 
     // Members property must be initialized before this method can be used.
-    public Builder addMembers(String... members) {
+    public Builder addMembers(String member, String... moreMembers) {
       ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
       membersBuilder.addAll(getMembers());
-      for (String member : members) {
-        membersBuilder.add(member);
-      }
+      membersBuilder.addAll(Lists.asList(member, moreMembers));
       setMembers(membersBuilder.build());
       return this;
     }
 
     // Members property must be initialized before this method can be used.
     public Builder removeMembers(String... members) {
-      Predicate<String> selectMembersNotInList =
-          Predicates.not(Predicates.in(Arrays.asList(members)));
+      Predicate<String> selectMembersNotInList = not(in(Arrays.asList(members)));
       Collection<String> filter = Collections2.filter(getMembers(), selectMembersNotInList);
       setMembers(ImmutableList.copyOf(filter));
       return this;

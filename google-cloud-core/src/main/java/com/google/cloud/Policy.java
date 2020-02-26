@@ -48,7 +48,7 @@ import java.util.Set;
 public final class Policy implements Serializable {
 
   private static final long serialVersionUID = -3348914530232544290L;
-  private final List<Binding> bindingsList;
+  private final ImmutableList<Binding> bindingsList;
   private final String etag;
   private final int version;
 
@@ -102,7 +102,7 @@ public final class Policy implements Serializable {
         Binding.Builder convertedBinding =
             Binding.newBuilder()
                 .setRole(bindingPb.getRole())
-                .setMembers(ImmutableList.copyOf(bindingPb.getMembersList()));
+                .setMembers(bindingPb.getMembersList());
         if (bindingPb.hasCondition()) {
           Expr expr = bindingPb.getCondition();
           convertedBinding.setCondition(
@@ -131,7 +131,7 @@ public final class Policy implements Serializable {
       for (Binding binding : policy.getBindingsList()) {
         com.google.iam.v1.Binding.Builder bindingBuilder = com.google.iam.v1.Binding.newBuilder();
         bindingBuilder.setRole(binding.getRole());
-        bindingBuilder.addAllMembers(ImmutableList.copyOf(binding.getMembers()));
+        bindingBuilder.addAllMembers(binding.getMembers());
         if (binding.getCondition() != null) {
           Condition condition = binding.getCondition();
           bindingBuilder.setCondition(
@@ -163,9 +163,7 @@ public final class Policy implements Serializable {
 
     @InternalApi("This class should only be extended within google-cloud-java")
     protected Builder(Policy policy) {
-      for (Binding binding : policy.bindingsList) {
-        bindingsList.add(binding.toBuilder().build());
-      }
+      bindingsList.addAll(policy.bindingsList);
       setEtag(policy.etag);
       setVersion(policy.version);
     }
@@ -175,7 +173,8 @@ public final class Policy implements Serializable {
      *
      * @throws NullPointerException if the given map is null or contains any null keys or values
      * @throws IllegalArgumentException if any identities in the given map are null or if policy
-     *     version is equal to 3 or has conditional bindings.
+     *     version is equal to 3 or has conditional bindings because conditional policies are not
+     *     supported
      */
     public final Builder setBindings(Map<Role, Set<Identity>> bindings) {
       checkNotNull(bindings, "The provided map of bindings cannot be null.");
@@ -207,7 +206,7 @@ public final class Policy implements Serializable {
      * Replaces the builder's List of bindings with the given List of Bindings.
      *
      * @throws NullPointerException if the given list is null, role is null, or contains any null
-     *     members in bindings.
+     *     members in bindings
      */
     public final Builder setBindings(List<Binding> bindings) {
       this.bindingsList.clear();
@@ -221,7 +220,12 @@ public final class Policy implements Serializable {
       return this;
     }
 
-    /** Removes the role (and all identities associated with that role) from the policy. */
+    /**
+     * Removes the role (and all identities associated with that role) from the policy.
+     *
+     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings
+     *     because conditional policies are not supported
+     */
     public final Builder removeRole(Role role) {
       checkArgument(
           !isConditional(this.version, this.bindingsList),
@@ -283,7 +287,7 @@ public final class Policy implements Serializable {
      * Removes one or more identities from an existing binding. Does nothing if the binding
      * associated with the provided role doesn't exist.
      *
-     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
+     * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings
      */
     public final Builder removeIdentity(Role role, Identity first, Identity... others) {
       checkArgument(
@@ -360,7 +364,7 @@ public final class Policy implements Serializable {
   /**
    * Returns the map of bindings that comprises the policy.
    *
-   * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings.
+   * @throws IllegalArgumentException if policy version is equal to 3 or has conditional bindings
    */
   public Map<Role, Set<Identity>> getBindings() {
     checkArgument(
@@ -378,7 +382,7 @@ public final class Policy implements Serializable {
   }
 
   /** Returns the list of bindings that comprises the policy for version 3. */
-  public List<Binding> getBindingsList() {
+  public ImmutableList<Binding> getBindingsList() {
     return bindingsList;
   }
 
@@ -428,13 +432,8 @@ public final class Policy implements Serializable {
       return false;
     }
     Policy other = (Policy) obj;
-    if (bindingsList.size() != other.getBindingsList().size()) {
+    if (!bindingsList.equals(other.getBindingsList())) {
       return false;
-    }
-    for (int i = 0; i < bindingsList.size(); i++) {
-      if (!bindingsList.get(i).equals(other.getBindingsList().get(i))) {
-        return false;
-      }
     }
     return Objects.equals(etag, other.getEtag()) && Objects.equals(version, other.getVersion());
   }
