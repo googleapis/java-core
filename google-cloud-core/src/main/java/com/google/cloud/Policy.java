@@ -43,7 +43,7 @@ import java.util.Set;
  * identities to a role, where the identities can be user accounts, Google groups, Google domains,
  * and service accounts. A role is a named list of permissions defined by IAM.
  *
- * @see <a href="https://cloud.google.com/iam/reference/rest/v1/Policy">Policy</a>
+ * @see <a href="https://cloud.google.com/iam/docs/reference/rest/v1/Policy">Policy</a>
  */
 public final class Policy implements Serializable {
 

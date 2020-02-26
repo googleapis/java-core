@@ -30,18 +30,31 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
+/**
+ * Class for Identity and Access Management (IAM) policies. IAM policies are used to specify access
+ * settings for Cloud Platform resources. A policy is a list of bindings. A binding assigns a set of
+ * identities to a role, where the identities can be user accounts, Google groups, Google domains,
+ * and service accounts. A role is a named list of permissions defined by IAM.
+ *
+ * @see <a href="https://cloud.google.com/iam/docs/reference/rest/v1/Policy">Policy</a>
+ */
 @BetaApi("This is a Beta API is not stable yet and may change in the future.")
 @AutoValue
 public abstract class Binding {
+  /** Get IAM Policy Binding Role */
   public abstract String getRole();
 
+  /** Get IAM Policy Binding Members */
   public abstract ImmutableList<String> getMembers();
 
+  /** Get IAM Policy Binding Condition */
   @Nullable
   public abstract Condition getCondition();
 
+  /** Create a Binding.Builder from an existing Binding */
   public abstract Builder toBuilder();
 
+  /** Create a new Binding.Builder */
   public static Builder newBuilder() {
     List<String> emptyMembers = ImmutableList.of();
     return new AutoValue_Binding.Builder().setMembers(emptyMembers);
@@ -49,15 +62,31 @@ public abstract class Binding {
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /**
+     * Set IAM Role for Policy Binding
+     *
+     * @throws NullPointerException if the role is null.
+     */
     public abstract Builder setRole(String role);
 
+    /**
+     * Set IAM Members for Policy Binding
+     *
+     * @throws NullPointerException if a member is null.
+     */
     public abstract Builder setMembers(Iterable<String> members);
 
+    /** Set IAM Condition for Policy Binding */
     public abstract Builder setCondition(Condition condition);
 
+    /** Internal use to getMembers() in addMembers() and removeMembers() */
     abstract ImmutableList<String> getMembers();
 
-    // Members property must be initialized before this method can be used.
+    /**
+     * Add members to Policy Binding.
+     *
+     * @throws NullPointerException if a member is null.
+     */
     public Builder addMembers(String member, String... moreMembers) {
       ImmutableList.Builder<String> membersBuilder = ImmutableList.builder();
       membersBuilder.addAll(getMembers());
@@ -66,7 +95,11 @@ public abstract class Binding {
       return this;
     }
 
-    // Members property must be initialized before this method can be used.
+    /**
+     * Remove members to Policy Binding.
+     *
+     * @throws NullPointerException if a member is null.
+     */
     public Builder removeMembers(String... members) {
       Predicate<String> selectMembersNotInList = not(in(Arrays.asList(members)));
       Collection<String> filter = Collections2.filter(getMembers(), selectMembersNotInList);
