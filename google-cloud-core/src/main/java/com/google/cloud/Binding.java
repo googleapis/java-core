@@ -51,7 +51,7 @@ public abstract class Binding {
   public abstract static class Builder {
     public abstract Builder setRole(String role);
 
-    public abstract Builder setMembers(List<String> members);
+    public abstract Builder setMembers(Iterable<String> members);
 
     public abstract Builder setCondition(Condition condition);
 
@@ -70,7 +70,7 @@ public abstract class Binding {
     public Builder removeMembers(String... members) {
       Predicate<String> selectMembersNotInList = not(in(Arrays.asList(members)));
       Collection<String> filter = Collections2.filter(getMembers(), selectMembersNotInList);
-      setMembers(ImmutableList.copyOf(filter));
+      setMembers(filter);
       return this;
     }
 
