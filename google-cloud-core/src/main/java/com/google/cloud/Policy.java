@@ -432,7 +432,9 @@ public final class Policy implements Serializable {
       return false;
     }
     for (int i = 0; i < bindingsList.size(); i++) {
-      bindingsList.get(i).equals(other.getBindingsList().get(i));
+      if (!bindingsList.get(i).equals(other.getBindingsList().get(i))) {
+        return false;
+      }
     }
     return Objects.equals(etag, other.getEtag()) && Objects.equals(version, other.getVersion());
   }
