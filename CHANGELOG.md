@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.92.7](https://www.github.com/googleapis/java-core/compare/v1.92.6...v1.92.7) (2020-02-27)
+
+
+### Bug Fixes
+
+* fix conversion for pre-epoch timestamps ([#160](https://www.github.com/googleapis/java-core/issues/160)) ([1f8b6b4](https://www.github.com/googleapis/java-core/commit/1f8b6b4835aaa702ec94bbbde89ed90f519c935a))
+
+
+### Dependencies
+
+* update dependency io.grpc:grpc-bom to v1.27.2 ([#166](https://www.github.com/googleapis/java-core/issues/166)) ([28c9859](https://www.github.com/googleapis/java-core/commit/28c98595c9ee96760a063085bd85024177bd6dd2))
+
 ### [1.92.5](https://www.github.com/googleapis/java-core/compare/v1.92.4...v1.92.5) (2020-02-10)
 
 
