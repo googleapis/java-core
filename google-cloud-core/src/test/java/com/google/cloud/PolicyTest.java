@@ -130,10 +130,7 @@ public class PolicyTest {
             .addIdentity(role2, identity2)
             .build();
     Policy policy2 =
-        Policy.newBuilder()
-            .addIdentity(role2, identity2)
-            .addIdentity(role1, identity1)
-            .build();
+        Policy.newBuilder().addIdentity(role2, identity2).addIdentity(role1, identity1).build();
     assertEquals(policy1, policy2);
   }
 
