@@ -18,6 +18,7 @@ package com.google.cloud;
 
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.common.testing.EqualsTester;
@@ -93,7 +94,7 @@ public class TimestampTest {
     String expectedTimestampString = "1970-01-01T00:00:12Z";
     java.sql.Timestamp input = new java.sql.Timestamp(12000);
     Timestamp timestamp = Timestamp.of(input);
-    assertThat(timestamp.toString()).isEqualTo(expectedTimestampString);
+    assertEquals(timestamp.toString(), expectedTimestampString);
   }
 
   @Test
@@ -109,7 +110,7 @@ public class TimestampTest {
     String expectedTimestampString = "1970-01-01T00:00:00Z";
     java.sql.Timestamp input = new java.sql.Timestamp(0);
     Timestamp timestamp = Timestamp.of(input);
-    assertThat(timestamp.toString()).isEqualTo(expectedTimestampString);
+    assertEquals(timestamp.toString(), expectedTimestampString);
   }
 
   @Test

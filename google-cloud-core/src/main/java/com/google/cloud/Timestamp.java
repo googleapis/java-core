@@ -122,9 +122,9 @@ public final class Timestamp implements Comparable<Timestamp>, Serializable {
     int nanos = timestamp.getNanos();
 
     // A pre-epoch timestamp can be off by one second because of the way that integer division
-    // works. For example, -1001 / 1000 == -1. In this case of timestamps, we want this result to be
-    // -2. This causes any pre-epoch timestamp to be off by 1 second - fix this by adjusting the
-    // seconds value by 1 if the timestamp < 0 and the division by 1000 has a remainder.
+    // works. For example, -1001 / 1000 == -1. In this case, we want this result to be -2. This
+    // causes any pre-epoch timestamp to be off by 1 second - fix this by subtracting 1 from the
+    // seconds value if the seconds value is less than zero and is not divisible by 1000.
     // TODO: replace with Math.floorDiv when we drop Java 7 support
     long seconds = timestamp.getTime() / 1000;
     if (seconds < 0 && timestamp.getTime() % 1000 != 0) {
