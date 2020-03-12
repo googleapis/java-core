@@ -89,7 +89,7 @@ public class TimestampTest {
   }
 
   @Test
-  public void ofSqlTimestampOnExactSecond() {
+  public void testOf_exactSecond() {
     String expectedTimestampString = "1970-01-01T00:00:12Z";
     java.sql.Timestamp input = new java.sql.Timestamp(12000);
     Timestamp timestamp = Timestamp.of(input);
@@ -113,7 +113,7 @@ public class TimestampTest {
   }
 
   @Test
-  public void ofSqlTimestampPreEpochOnExactSecond() {
+  public void testOf_preEpochExactSecond() {
     String expectedTimestampString = "1969-12-31T23:59:59Z";
     java.sql.Timestamp input = new java.sql.Timestamp(-1000);
     Timestamp timestamp = Timestamp.of(input);
