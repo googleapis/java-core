@@ -151,7 +151,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <github.global.server>github</github.global.server>
     <site.installationModule>google-cloud-core-parent</site.installationModule>
-    <auto-value.version>1.7</auto-value.version>
+    <auto-value.version>1.7.2</auto-value.version>
     <auto-value-annotations.version>1.7</auto-value-annotations.version>
     <gax.version>1.56.0</gax.version>
     <google.api-common.version>1.9.0</google.api-common.version>
