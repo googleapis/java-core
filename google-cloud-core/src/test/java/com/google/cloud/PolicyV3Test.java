@@ -61,9 +61,7 @@ public class PolicyV3Test {
           .build();
   private static final List<Binding> BINDINGS_WITH_CONDITIONS =
       ImmutableList.copyOf(BINDINGS_NO_CONDITIONS)
-          .of(
-              BINDINGS_NO_CONDITIONS.get(0).toBuilder().setCondition(CONDITION).build(),
-              BINDINGS_NO_CONDITIONS.get(1).toBuilder().build());
+          .of(VIEWER_BINDING.toBuilder().setCondition(CONDITION).build(), EDITOR_BINDING);
   private static final Policy FULL_POLICY_V1 =
       Policy.newBuilder().setBindings(BINDINGS_NO_CONDITIONS).setEtag("etag").setVersion(1).build();
 
