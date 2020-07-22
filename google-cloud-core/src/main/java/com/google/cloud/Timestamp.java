@@ -190,11 +190,13 @@ public final class Timestamp implements Comparable<Timestamp>, Serializable {
   }
 
   /**
-   * Creates a Timestamp instance from the given string.
+   * Creates a Timestamp instance from the given string. Input string should be in the RFC 3339
+   * format, like '2020-12-01T10:15:30.000Z' or with the timezone offset, such as
+   * '2020-12-01T10:15:30+01:00'.
    *
-   * @param timestamp string is in the RFC 3339 format i.e '2020-12-01T10:15:30.000Z' or with an
-   *     offset, such as '2020-12-01T10:15:30+01:00'
-   * @throws DateTimeParseException upon failure
+   * @param timestamp string in the RFC 3339 format
+   * @return created Timestamp
+   * @throws DateTimeParseException if unable to parse
    */
   public static Timestamp parseTimestamp(String timestamp) {
     TemporalAccessor temporalAccessor = timestampParser.parse(timestamp);
