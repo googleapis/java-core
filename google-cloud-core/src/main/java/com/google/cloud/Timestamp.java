@@ -189,8 +189,8 @@ public final class Timestamp implements Comparable<Timestamp>, Serializable {
   }
 
   /**
-   * Creates a Timestamp instance from the given string. String is in the RFC 3339 format without
-   * the timezone offset (always ends in "Z").
+   * Creates a Timestamp instance from the given string. String is in the RFC 3339 format with
+   * timezone offset or without timezone offset.
    */
   public static Timestamp parseTimestamp(String timestamp) {
     TemporalAccessor temporalAccessor = timestampParser.parse(timestamp);

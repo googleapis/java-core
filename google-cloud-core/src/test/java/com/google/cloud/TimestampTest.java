@@ -240,7 +240,7 @@ public class TimestampTest {
   }
 
   @Test
-  public void parseTimestamp() {
+  public void parseTimestampWithTimeZoneOffset() {
     assertThat(Timestamp.parseTimestamp("0001-01-01T00:00:00Z")).isEqualTo(Timestamp.MIN_VALUE);
     assertThat(Timestamp.parseTimestamp("9999-12-31T23:59:59.999999999Z"))
         .isEqualTo(Timestamp.MAX_VALUE);
