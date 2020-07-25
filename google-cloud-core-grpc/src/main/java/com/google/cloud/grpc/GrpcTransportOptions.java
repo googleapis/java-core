@@ -40,7 +40,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /** Class representing service options for those services that use gRPC as the transport layer. */
 public class GrpcTransportOptions implements TransportOptions {
@@ -57,13 +56,11 @@ public class GrpcTransportOptions implements TransportOptions {
         public ScheduledExecutorService create() {
           ScheduledThreadPoolExecutor service =
               new ScheduledThreadPoolExecutor(
-                  8,
+                  Math.max(8, Runtime.getRuntime().availableProcessors() * 2),
                   new ThreadFactoryBuilder()
                       .setDaemon(true)
                       .setNameFormat("grpc-transport-%d")
                       .build());
-          service.setKeepAliveTime(5, TimeUnit.SECONDS);
-          service.allowCoreThreadTimeOut(true);
           service.setRemoveOnCancelPolicy(true);
           return service;
         }
