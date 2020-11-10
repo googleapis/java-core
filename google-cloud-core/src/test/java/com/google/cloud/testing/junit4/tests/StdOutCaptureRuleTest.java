@@ -29,7 +29,7 @@ public class StdOutCaptureRuleTest {
   @Test
   public void captureSuccessful() {
     System.out.println("hello world");
-    String expected = "hello world\n";
+    String expected = "hello world" + System.lineSeparator();
     String actual = stdOutCap.getCapturedOutputAsUtf8String();
     assertEquals(expected, actual);
   }

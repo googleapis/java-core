@@ -29,7 +29,7 @@ public class StdErrCaptureRuleTest {
   @Test
   public void captureSuccessful() {
     System.err.println("err world");
-    String expected = "err world\n";
+    String expected = "err world" + System.lineSeparator();
     String actual = stdOutCap.getCapturedOutputAsUtf8String();
     assertEquals(expected, actual);
   }
