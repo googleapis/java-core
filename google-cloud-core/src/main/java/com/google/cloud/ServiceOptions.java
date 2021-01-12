@@ -30,7 +30,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Charsets;
 import com.google.api.core.ApiClock;
 import com.google.api.core.BetaApi;
@@ -519,7 +519,7 @@ public abstract class ServiceOptions<
     String value = null;
     if (credentialsPath != null) {
       try (InputStream credentialsStream = new FileInputStream(credentialsPath)) {
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         JsonObjectParser parser = new JsonObjectParser(jsonFactory);
         GenericJson fileContents =
             parser.parseAndClose(credentialsStream, Charsets.UTF_8, GenericJson.class);
