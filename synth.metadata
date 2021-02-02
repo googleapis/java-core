@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-core.git",
-        "sha": "0f2eadd32020b546e71332bf4009e4c9195ee72a"
+        "sha": "107a32aa170eca0f61e14183af1e795a61291d49"
       }
     },
     {
