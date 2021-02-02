@@ -444,8 +444,8 @@ public class ServiceOptionsTest {
     credentialsFile.deleteOnExit();
     Files.write("asdfghj".getBytes(StandardCharsets.UTF_8), credentialsFile);
 
-    String valueFromCredentialsFile = ServiceOptions.getValueFromCredentialsFile(
-        credentialsFile.getPath(), "project_id");
+    String valueFromCredentialsFile =
+        ServiceOptions.getValueFromCredentialsFile(credentialsFile.getPath(), "project_id");
     assertNull(valueFromCredentialsFile);
   }
 
