@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.95.5](https://www.github.com/googleapis/java-core/compare/v1.95.4...v1.95.5) (2021-07-15)
+
+
+### Bug Fixes
+
+* Add shopt -s nullglob to dependencies script ([1fa147c](https://www.github.com/googleapis/java-core/commit/1fa147c9cded08f9eea4a717c622c0b33ad239d0))
+* Update dependencies.sh to not break on mac ([#484](https://www.github.com/googleapis/java-core/issues/484)) ([1fa147c](https://www.github.com/googleapis/java-core/commit/1fa147c9cded08f9eea4a717c622c0b33ad239d0))
+
+
+### Dependencies
+
+* update dependency com.google.api:gax-bom to v1.66.0 ([#483](https://www.github.com/googleapis/java-core/issues/483)) ([0698c66](https://www.github.com/googleapis/java-core/commit/0698c6679877e0666c684ea5c5daaf8ebae7c15c))
+* update dependency io.grpc:grpc-bom to v1.39.0 ([#482](https://www.github.com/googleapis/java-core/issues/482)) ([02e69d4](https://www.github.com/googleapis/java-core/commit/02e69d46d3b8a71b6286915e08e987a5fc9ce8a6))
+
 ### [1.95.4](https://www.github.com/googleapis/java-core/compare/v1.95.3...v1.95.4) (2021-06-25)
 
 
