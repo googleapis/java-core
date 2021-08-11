@@ -331,7 +331,7 @@ public abstract class BaseEmulatorHelper<T extends ServiceOptions> {
     }
 
     public DownloadableEmulatorRunner(
-            List<String> commandText, URL downloadUrl, String md5CheckSum, String accessToken) {
+        List<String> commandText, URL downloadUrl, String md5CheckSum, String accessToken) {
       this(commandText, downloadUrl, md5CheckSum);
       this.accessToken = accessToken;
     }
