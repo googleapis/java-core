@@ -51,6 +51,8 @@ public abstract class BaseService<OptionsT extends ServiceOptions<?, OptionsT>>
   public static final ExceptionHandler EXCEPTION_HANDLER =
       ExceptionHandler.newBuilder()
           .abortOn(RuntimeException.class)
+          .retryOn(java.net.ConnectException.class)
+          .retryOn(java.net.UnknownHostException.class)
           .addInterceptors(EXCEPTION_HANDLER_INTERCEPTOR)
           .build();
 
