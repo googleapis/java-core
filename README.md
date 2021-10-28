@@ -50,3 +50,4 @@ Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/
 [semver]: http://semver.org/
 [cloud-platform]: https://cloud.google.com/
 [api-docs]: https://googleapis.dev/java/google-cloud-core/latest
+
