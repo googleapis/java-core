@@ -12,7 +12,11 @@ jobs:
       matrix:
         java: [8, 11]
         repo:
-        - java-shared-dependencies
+        - java-bigquery
+          - java-bigqueryconnection
+          - java-spanner
+          - java-storage
+          - java-pubsub
     steps:
     - uses: actions/checkout@v2
     - uses: stCarolas/setup-maven@v4

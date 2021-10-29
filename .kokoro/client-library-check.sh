@@ -49,20 +49,20 @@ echo "Version: ${CORE_VERSION}"
 
 # Check this BOM against a few java client libraries
 # java-bigquery
-git clone "https://github.com/googleapis/${REPO}.git" --depth=1
-pushd ${REPO}
+git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
+pushd java-shared-dependencies/first-party-dependencies
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
 setns x=http://maven.apache.org/POM/4.0.0
-cd .//x:artifactId[text()="google-cloud-core"]
+cd .//x:artifactId[text()="google-cloud-core-bom"]
 cd ../x:version
 set ${CORE_VERSION}
 save pom.xml
 EOF
 
 # run dependencies script
-.kokoro/dependencies.sh
+../.kokoro/dependencies.sh
 ###############Round 2
 # Make artifacts available for 'mvn validate' at the bottom
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
@@ -80,14 +80,14 @@ echo "Version: ${DEPS_VERSION}"
 
 # Check this BOM against a few java client libraries
 # java-bigquery
-git clone "https://github.com/googleapis/java-eventarc.git" --depth=1
+git clone "https://github.com/googleapis/${REPO}}.git" --depth=1
 pushd ${REPO}
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
 setns x=http://maven.apache.org/POM/4.0.0
-cd .//x:artifactId[text()="google-cloud-core"]
+cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
 cd ../x:version
-set ${CORE_VERSION}
+set ${DEPS_VERSION}
 save pom.xml
 EOF
 
