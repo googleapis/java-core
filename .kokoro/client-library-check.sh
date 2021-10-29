@@ -33,10 +33,10 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
-# Make artifacts available for 'mvn validate' at the bottom
+# Make java-core artifacts available for 'mvn validate' at the bottom
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
 
-# Read the current version of this BOM in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
+# Read the current version of this java-core in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
 CORE_VERSION_POM=pom.xml
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
 CORE_VERSION=`sed -e 's/xmlns=".*"//' ${CORE_VERSION_POM} | xmllint --xpath '/project/version/text()' -`
@@ -47,8 +47,8 @@ if [ -z "${CORE_VERSION}" ]; then
 fi
 echo "Version: ${CORE_VERSION}"
 
-# Check this BOM against a few java client libraries
-# java-bigquery
+# Check this java-core against HEAD of java-shared dependencies
+
 git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
 pushd java-shared-dependencies/first-party-dependencies
 
@@ -64,7 +64,7 @@ EOF
 # run dependencies script
 cd ..
 mvn -Denforcer.skip=true clean install
-###############Round 2
+
 # Make artifacts available for 'mvn validate' at the bottom
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
 
