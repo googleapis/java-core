@@ -80,7 +80,7 @@ echo "Version: ${DEPS_VERSION}"
 
 # Check this BOM against a few java client libraries
 # java-bigquery
-git clone "https://github.com/googleapis/${REPO}}.git" --depth=1
+git clone "https://github.com/googleapis/${REPO}.git" --depth=1
 pushd ${REPO}
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
