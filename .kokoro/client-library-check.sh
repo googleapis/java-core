@@ -51,8 +51,6 @@ echo "Version: ${CORE_VERSION}"
 # java-bigquery
 git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
 pushd java-shared-dependencies/first-party-dependencies
-LATEST=$(git tag --sort=committerdate | tail -1)
-git checkout ${LATEST}
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
