@@ -51,6 +51,8 @@ echo "Version: ${CORE_VERSION}"
 # java-bigquery
 git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
 pushd java-shared-dependencies/first-party-dependencies
+LATEST=$(git tag --sort=committerdate | tail -1)
+git checkout ${LATEST}
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
@@ -62,7 +64,8 @@ save pom.xml
 EOF
 
 # run dependencies script
-../.kokoro/dependencies.sh
+cd ..
+mvn -Denforcer.skip=true clean install
 ###############Round 2
 # Make artifacts available for 'mvn validate' at the bottom
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
@@ -92,4 +95,4 @@ save pom.xml
 EOF
 
 # run dependencies script
-.kokoro/dependencies.sh
+mvn -Denforcer.skip=true clean install
