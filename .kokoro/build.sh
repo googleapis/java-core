@@ -76,7 +76,7 @@ graalvm)
     ;;
 cross-project-test)
     # Run checks with kokoro
-    ./kokoro/client-library-check.sh java-eventarc
+    ./.kokoro/client-library-check.sh java-eventarc
     RETURN_CODE=$?
     ;;
 samples)
