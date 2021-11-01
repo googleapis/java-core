@@ -74,6 +74,11 @@ graalvm)
     mvn test -Pnative -Penable-integration-tests
     RETURN_CODE=$?
     ;;
+cross-project-test)
+    # Run checks with kokoro
+    ./kokoro/client-library-check.sh java-eventarc
+    RETURN_CODE=$?
+    ;;
 samples)
     SAMPLES_DIR=samples
     # only run ITs in snapshot/ on presubmit PRs. run ITs in all 3 samples/ subdirectories otherwise.
