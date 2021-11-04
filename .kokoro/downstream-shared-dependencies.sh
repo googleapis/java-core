@@ -49,8 +49,8 @@ echo "Version: ${CORE_VERSION}"
 
 # Check this java-core against HEAD of java-shared dependencies
 
-git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
-pushd java-shared-dependencies/first-party-dependencies
+git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
+pushd java-${REPO}/first-party-dependencies
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
