@@ -68,3 +68,5 @@ if [ -z "${SHARED_DEPS_VERSION}" ]; then
 fi
 return ${SHARED_DEPS_VERSION}
 }
+
+get_version

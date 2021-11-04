@@ -23,7 +23,7 @@ jobs:
     - run: sudo apt-get install libxml2-utils
     - id: install-shared-dependencies
       run: |
-        version=$(.kokoro/downstream-shared-dependencies.sh get_version)
+        version=$(.kokoro/downstream-shared-dependencies.sh)
         echo "::set-output name=VERSION::$version"
     - uses: actions/upload-artifact@v2
       with:
