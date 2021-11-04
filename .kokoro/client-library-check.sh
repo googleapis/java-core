@@ -64,33 +64,3 @@ EOF
 # run dependencies script
 cd ..
 mvn -Denforcer.skip=true clean install
-
-# Make artifacts available for 'mvn validate' at the bottom
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
-
-# Read the current version of this BOM in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
-DEPS_VERSION_POM=pom.xml
-# Namespace (xmlns) prevents xmllint from specifying tag names in XPath
-DEPS_VERSION=`sed -e 's/xmlns=".*"//' ${DEPS_VERSION_POM} | xmllint --xpath '/project/version/text()' -`
-
-if [ -z "${DEPS_VERSION}" ]; then
-  echo "Version is not found in ${DEPS_VERSION_POM}"
-  exit 1
-fi
-echo "Version: ${DEPS_VERSION}"
-
-# Check this BOM against a few java client libraries
-# java-bigquery
-git clone "https://github.com/googleapis/${REPO}.git" --depth=1
-pushd ${REPO}
-# replace version
-xmllint --shell <(cat pom.xml) << EOF
-setns x=http://maven.apache.org/POM/4.0.0
-cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
-cd ../x:version
-set ${DEPS_VERSION}
-save pom.xml
-EOF
-
-# run dependencies script
-mvn -Denforcer.skip=true clean install

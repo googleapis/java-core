@@ -5,24 +5,48 @@ on:
   pull_request:
 name: downstream
 jobs:
-  dependencies:
+  shared-dependencies:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         java: [17]
         repo:
-          - java-bigquery
-          - java-bigqueryconnection
-          - java-spanner
-          - java-storage
-          - java-pubsub
+          - java-shared-dependencies
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
         java-version: ${{matrix.java}}
+    - run: java -version
+    - run: sudo apt-get install libxml2-utils
+    - run: .kokoro/client-library-check.sh ${{matrix.repo}}
+    - uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: ~/.m2
+    - run: echo $(ls ~/.m2)
+  client-libraries:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17]
+        repo:
+        - java-bigquery
+        - java-bigqueryconnection
+        - java-spanner
+        - java-storage
+        - java-pubsub
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v2
+      with:
+        distribution: zulu
+        java-version: ${{matrix.java}}
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v2
     - run: java -version
     - run: sudo apt-get install libxml2-utils
     - run: .kokoro/client-library-check.sh ${{matrix.repo}}
