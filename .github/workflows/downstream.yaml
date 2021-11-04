@@ -23,7 +23,7 @@ jobs:
     - run: sudo apt-get install libxml2-utils
     - run: .kokoro/client-library-check.sh ${{matrix.repo}}
     - uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: ~/.m2
+      with:
+        name: Package
+        path: ~/.m2
     - run: echo $(ls ~/.m2)
