@@ -16,7 +16,7 @@
 # Presubmit to ensure the dependencies of the Google Libraries BOM, with the modification of change
 # in the PR, pick up the highest versions among transitive dependencies.
 # https://maven.apache.org/enforcer/enforcer-rules/requireUpperBoundDeps.html
-get_version() {
+function get_version {
 set -eo pipefail
 # Display commands being run.
 set -x
