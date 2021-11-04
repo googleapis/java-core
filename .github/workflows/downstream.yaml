@@ -11,8 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         java: [17]
-        repo:
-          - shared-dependencies
     outputs:
       shared-dependencies-version: ${{ steps.install-shared-dependencies.outputs.VERSION }}
     steps:
@@ -24,12 +22,12 @@ jobs:
     - run: java -version
     - run: sudo apt-get install libxml2-utils
     - id: install-shared-dependencies
-      run: echo "::set-output name=VERSION::$(.kokoro/downstream-shared-dependencies.sh ${{matrix.repo}})"
+      run: echo "::set-output name=VERSION::$(.kokoro/downstream-shared-dependencies.sh get_version"
+    - run: .kokoro/downstream-shared-dependencies.sh
     - uses: actions/upload-artifact@v2
       with:
         name: Package
         path: ~/.m2
-    - run: echo $(ls ~/.m2)
   client-libraries:
     needs: shared-dependencies
     runs-on: ubuntu-latest

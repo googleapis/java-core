@@ -21,13 +21,6 @@ set -eo pipefail
 # Display commands being run.
 set -x
 
-if [[ $# -lt 1 ]];
-then
-  echo "Usage: $0 <repo-name>"
-  exit 1
-fi
-REPO=$1
-
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
@@ -49,8 +42,8 @@ echo "Version: ${CORE_VERSION}"
 
 # Check this java-core against HEAD of java-shared dependencies
 
-git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
-pushd java-${REPO}/first-party-dependencies
+git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
+pushd java-shared-dependencies/first-party-dependencies
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
@@ -64,3 +57,16 @@ EOF
 # run dependencies script
 cd ..
 mvn -Denforcer.skip=true clean install
+
+get_version() {
+cd pushd java-shared-dependencies
+SHARED_DEPS_VERSION_POM=pom.xml
+# Namespace (xmlns) prevents xmllint from specifying tag names in XPath
+SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' ${SHARED_DEPS_VERSION_POM} | xmllint --xpath '/project/version/text()' -`
+
+if [ -z "${SHARED_DEPS_VERSION}" ]; then
+  echo "Version is not found in ${SHARED_DEPS_VERSION_POM}"
+  exit 1
+fi
+return "Version: ${SHARED_DEPS_VERSION}"
+}

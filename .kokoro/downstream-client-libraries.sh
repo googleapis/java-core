@@ -45,7 +45,7 @@ cd ${scriptDir}/..
 git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
 pushd java-${REPO}
 
-mvn install:install-file -Dfile="$HOME/.m2/repository/com/google/cloud/google-cloud-shared-dependencies/2.4.0/google-cloud-shared-dependencies-2.4.0-tests.jar" -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
+mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
