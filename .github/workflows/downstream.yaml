@@ -23,8 +23,8 @@ jobs:
     - run: sudo apt-get install libxml2-utils
     - id: install-shared-dependencies
       run: |
-        $version=$(.kokoro/downstream-shared-dependencies.sh get_version)
-        Write-Output "::set-output name=VERSION::$version"
+        version=$(.kokoro/downstream-shared-dependencies.sh get_version)
+        echo "::set-output name=VERSION::$version"
     - uses: actions/upload-artifact@v2
       with:
         name: Package
@@ -52,4 +52,4 @@ jobs:
       uses: actions/download-artifact@v2
     - run: java -version
     - run: sudo apt-get install libxml2-utils
-    - run: .kokoro/downstream-client-libraries.sh ${{matrix.repo}} ${{needs.install-shared-dependencies.outputs.shared-dependencies-version }}
+    - run: .kokoro/downstream-client-libraries.sh ${{matrix.repo}} ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
