@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [8, 11]
+        java: [17]
         repo:
           - java-bigquery
           - java-bigqueryconnection
@@ -19,11 +19,9 @@ jobs:
           - java-pubsub
     steps:
     - uses: actions/checkout@v2
-    - uses: stCarolas/setup-maven@v4
+    - uses: actions/setup-java@v2
       with:
-        maven-version: 3.8.1
-    - uses: actions/setup-java@v1
-      with:
+        distribution: zulu
         java-version: ${{matrix.java}}
     - run: java -version
     - run: sudo apt-get install libxml2-utils
