@@ -62,7 +62,7 @@ jobs:
         cd ${scriptDir}/..
 
         PATH=$(pwd)/package
-        tree $PATH
+        find $PATH -type d -print
         FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
         if [ ! -f "$FILE_PATH" ]; then
