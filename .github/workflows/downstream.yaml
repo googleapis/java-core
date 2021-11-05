@@ -53,6 +53,7 @@ jobs:
         REPO=${{matrix.repo}}
         SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
         PATH=/home/runner/work/java-core/java-core/java-$REPO/package
+        ls -R $PATH
         FILE_PATH="$PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
         if [ ! -f "$FILE_PATH" ]; then
