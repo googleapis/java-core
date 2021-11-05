@@ -24,9 +24,10 @@ jobs:
         repository: googleapis/java-${{matrix.repo}}
         path: java-${{matrix.repo}}
     - run: |
+        pwd
         REPO=${{matrix.repo}}
         SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
-        PATH=/home/runner/work/java-core/java-core/java-$REPO/package
+        PATH=/home/runner/work/java-core/java-core/java-$REPO
         cp ${0} /home/runner/work/java-core/java-core/java-$REPO/downstream-check.sh
         chmod +x /home/runner/work/java-core/java-core/java-$REPO/downstream-check.sh
         ## cd to the parent directory, i.e. the root of the git repo
