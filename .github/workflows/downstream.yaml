@@ -53,4 +53,37 @@ jobs:
         repository: googleapis/java-${{matrix.repo}}
         path: java-${{matrix.repo}}
     - run: sudo apt-get install libxml2-utils
-    - run: .kokoro/downstream-client-libraries.sh ${{matrix.repo}} ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
+    - run: |
+        REPO=${{matrix.repo}}
+        SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
+        ## Get the directory of the build script
+        scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
+        ## cd to the parent directory, i.e. the root of the git repo
+        cd ${scriptDir}/..
+
+        PATH=$(pwd)/package
+        tree $PATH
+        FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
+
+        if [ ! -f "$FILE_PATH" ]; then
+        echo "$FILE_PATH does not exist."
+        exit 1
+        fi
+        # Check this java client library against the packaged version of java-shared-dependencies
+
+        #git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
+        #pushd java-${REPO}
+
+        mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
+
+        # replace version
+        xmllint --shell <(cat pom.xml) << EOF
+        setns x=http://maven.apache.org/POM/4.0.0
+        cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
+        cd ../x:version
+        set ${SHARED_DEPS_VERSION}
+        save pom.xml
+        EOF
+
+        # run dependencies script
+        mvn -Denforcer.skip=true clean install

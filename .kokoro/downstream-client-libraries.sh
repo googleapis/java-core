@@ -28,8 +28,6 @@ then
 fi
 REPO=$1
 SHARED_DEPS_VERSION=$2
-echo $SHARED_DEPS_VERSION
-
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
