@@ -29,7 +29,7 @@ fi
 REPO=$1
 SHARED_DEPS_VERSION=$2
 echo $SHARED_DEPS_VERSION
-FILE_PATH="$HOME/.m2/repository/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}.jar"
+FILE_PATH="$HOME/.m2/repository/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
 if [ ! -f "$FILE_PATH" ]; then
     echo "$FILE_PATH does not exist."
@@ -42,8 +42,8 @@ cd ${scriptDir}/..
 
 # Check this java client library against the packaged version of java-shared-dependencies
 
-git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
-pushd java-${REPO}
+#git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
+#pushd java-${REPO}
 
 mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
