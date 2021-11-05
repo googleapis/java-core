@@ -52,4 +52,5 @@ jobs:
       uses: actions/download-artifact@v2
     - run: java -version
     - run: sudo apt-get install libxml2-utils
+    - run: echo ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
     - run: .kokoro/downstream-client-libraries.sh ${{matrix.repo}} ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
