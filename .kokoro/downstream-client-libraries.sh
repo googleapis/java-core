@@ -44,8 +44,8 @@ if [ ! -f "$FILE_PATH" ]; then
 fi
 # Check this java client library against the packaged version of java-shared-dependencies
 
-#git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
-#pushd java-${REPO}
+git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
+pushd java-${REPO}
 
 mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
