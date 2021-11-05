@@ -29,17 +29,19 @@ fi
 REPO=$1
 SHARED_DEPS_VERSION=$2
 echo $SHARED_DEPS_VERSION
-FILE_PATH="$HOME/.m2/repository/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
-if [ ! -f "$FILE_PATH" ]; then
-    echo "$FILE_PATH does not exist."
-    exit 1
-fi
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
+PATH=$(pwd)
+FILE_PATH="$PATH/package/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
+
+if [ ! -f "$FILE_PATH" ]; then
+    echo "$FILE_PATH does not exist."
+    exit 1
+fi
 # Check this java client library against the packaged version of java-shared-dependencies
 
 #git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
