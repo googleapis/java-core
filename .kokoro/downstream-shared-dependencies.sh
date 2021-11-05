@@ -66,7 +66,8 @@ if [ -z "${SHARED_DEPS_VERSION}" ]; then
   echo "Version is not found in ${SHARED_DEPS_VERSION_POM}"
   exit 1
 fi
-echo ${SHARED_DEPS_VERSION}
+
+echo "::set-output name=VERSION::$SHARED_DEPS_VERSION"
 }
 
 get_version
