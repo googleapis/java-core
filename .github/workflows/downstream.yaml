@@ -5,22 +5,30 @@ on:
   pull_request:
 name: downstream
 jobs:
-  client-libraries1:
+  shared-dependencies:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17]
+    outputs:
+      shared-dependencies-version: ${{ steps.install-shared-dependencies.outputs.VERSION }}
     steps:
+    - uses: actions/checkout@v2
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
-        java-version: 17
+        java-version: ${{matrix.java}}
     - run: java -version
-    - uses: actions/checkout@v2
-    - run: mvn clean install
+    - run: sudo apt-get install libxml2-utils
+    - id: install-shared-dependencies
+      run: .kokoro/downstream-shared-dependencies.sh
     - uses: actions/upload-artifact@v2
       with:
         name: package
-        path: ~/.m2
+        path: ~/.m2/repository/com/google/cloud/google-cloud-shared-dependencies
   client-libraries:
-    needs: client-libraries1
+    needs: shared-dependencies
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -33,19 +41,38 @@ jobs:
       with:
         distribution: zulu
         java-version: ${{matrix.java}}
-    - run: java -version
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
+    - run: java -version
     - uses: actions/checkout@v2
       with:
         repository: googleapis/java-${{matrix.repo}}
         path: java-${{matrix.repo}}
+    - run: sudo apt-get install libxml2-utils
     - run: |
-        cd /home/runner/work/java-core/java-core/java-eventarc
-        echo "*******************/home/runner/work/java-core/java-core********************"
-        ls -R /home/runner/work/java-core/java-core
-        PATH="/home/runner/work/java-core/java-core/java-eventarc"
-        echo "*******************/home/runner/work/java-core/java-core/java-eventarc********************"
-        ls -R ${PATH}
-        #FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
+        REPO=${{matrix.repo}}
+        SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
+        PATH=/home/runner/work/java-core/java-core/package
+        FILE_PATH="$PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
+        if [ ! -f "$FILE_PATH" ]; then
+        echo "$FILE_PATH does not exist."
+        exit 1
+        fi
+
+        ## cd to the parent directory, i.e. the root of the git repo
+        pushd /home/runner/work/java-core/java-core/java-$REPO
+
+        mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
+
+        # replace version
+        xmllint --shell <(cat pom.xml) << EOF
+        setns x=http://maven.apache.org/POM/4.0.0
+        cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
+        cd ../x:version
+        set ${SHARED_DEPS_VERSION}
+        save pom.xml
+        EOF
+
+        # run dependencies script
+        mvn -Denforcer.skip=true clean install
