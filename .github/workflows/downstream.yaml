@@ -24,13 +24,11 @@ jobs:
         repository: googleapis/java-${{matrix.repo}}
         path: java-${{matrix.repo}}
     - run: |
-        scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
-        echo "This is script dir: $scriptDir"
-        ls -R $scriptDir
-        ## cd to the parent directory, i.e. the root of the git repo
-        cd ${HOME}/java-$REPO
-
-        PATH=${HOME}/java-core/java-core/package
+        cd /home/runner/work/java-core/java-core/java-eventarc
+        echo "*******************/home/runner/work/java-core/java-core********************"
+        ls -R /home/runner/work/java-core/java-core
+        PATH=/home/runner/work/java-core/java-core/java-eventarc
+        echo "*******************/home/runner/work/java-core/java-core/java-eventarc********************"
         ls -R $PATH
         #FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
