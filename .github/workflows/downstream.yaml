@@ -22,12 +22,10 @@ jobs:
     - run: java -version
     - run: sudo apt-get install libxml2-utils
     - id: install-shared-dependencies
-      run: |
-        version=$(.kokoro/downstream-shared-dependencies.sh)
-        echo "::set-output name=VERSION::$version"
+      run: .kokoro/downstream-shared-dependencies.sh
     - uses: actions/upload-artifact@v2
       with:
-        name: Package
+        name: package
         path: ~/.m2
   client-libraries:
     needs: shared-dependencies
@@ -43,7 +41,6 @@ jobs:
         - storage
         - pubsub
     steps:
-    - uses: actions/checkout@v2
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
@@ -51,6 +48,9 @@ jobs:
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
     - run: java -version
+    - uses: actions/checkout@v2
+      with:
+        repository: googleapis/java-${{matrix.repo}}
+        path: java-${{matrix.repo}}
     - run: sudo apt-get install libxml2-utils
-    - run: echo ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
     - run: .kokoro/downstream-client-libraries.sh ${{matrix.repo}} ${{needs.shared-dependencies.outputs.shared-dependencies-version }}
