@@ -62,7 +62,7 @@ jobs:
         ## cd to the parent directory, i.e. the root of the git repo
         cd ${scriptDir}/..
 
-        PATH=$(HOME)/package
+        PATH=${HOME}/package
         find $PATH -type d -print
         FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
