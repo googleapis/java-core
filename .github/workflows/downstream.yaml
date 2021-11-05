@@ -11,7 +11,7 @@ jobs:
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
-        java-version: ${{matrix.java}}
+        java-version: 17
     - run: java -version
     - uses: actions/checkout@v2
     - run: mvn clean install
