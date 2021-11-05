@@ -60,9 +60,9 @@ jobs:
         scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
         echo "This is script dir: $scriptDir"
         ## cd to the parent directory, i.e. the root of the git repo
-        cd ${scriptDir}/..
+        cd ${scriptDir}/java-$REPO
 
-        PATH=${HOME}/package
+        PATH=${HOME}/java-core/java-core/package
         ls -R $PATH
         FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
