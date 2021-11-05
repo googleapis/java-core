@@ -5,28 +5,6 @@ on:
   pull_request:
 name: downstream
 jobs:
-  shared-dependencies:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [17]
-    outputs:
-      shared-dependencies-version: ${{ steps.install-shared-dependencies.outputs.VERSION }}
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-java@v2
-      with:
-        distribution: zulu
-        java-version: ${{matrix.java}}
-    - run: java -version
-    - run: sudo apt-get install libxml2-utils
-    - id: install-shared-dependencies
-      run: .kokoro/downstream-shared-dependencies.sh
-    - uses: actions/upload-artifact@v2
-      with:
-        name: package
-        path: ~/.m2
   client-libraries:
     needs: shared-dependencies
     runs-on: ubuntu-latest
@@ -35,56 +13,25 @@ jobs:
       matrix:
         java: [17]
         repo:
-        - bigquery
-        - bigqueryconnection
-        - spanner
-        - storage
-        - pubsub
+        - eventarc
     steps:
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
         java-version: ${{matrix.java}}
-    - name: Download all workflow run artifacts
-      uses: actions/download-artifact@v2
     - run: java -version
     - uses: actions/checkout@v2
       with:
         repository: googleapis/java-${{matrix.repo}}
         path: java-${{matrix.repo}}
-    - run: sudo apt-get install libxml2-utils
     - run: |
-        REPO=${{matrix.repo}}
-        SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
-        ## Get the directory of the build script
         scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
         echo "This is script dir: $scriptDir"
+        ls -R $scriptDir
         ## cd to the parent directory, i.e. the root of the git repo
-        cd ${scriptDir}/../java-$REPO
+        cd ${HOME}/java-$REPO
 
         PATH=${HOME}/java-core/java-core/package
         ls -R $PATH
-        FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
+        #FILE_PATH="$PATH/com/google/cloud/google-cloud-shared-dependencies/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
-        if [ ! -f "$FILE_PATH" ]; then
-        echo "$FILE_PATH does not exist."
-        exit 1
-        fi
-        # Check this java client library against the packaged version of java-shared-dependencies
-
-        #git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
-        #pushd java-${REPO}
-
-        mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
-
-        # replace version
-        xmllint --shell <(cat pom.xml) << EOF
-        setns x=http://maven.apache.org/POM/4.0.0
-        cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
-        cd ../x:version
-        set ${SHARED_DEPS_VERSION}
-        save pom.xml
-        EOF
-
-        # run dependencies script
-        mvn -Denforcer.skip=true clean install
