@@ -60,7 +60,7 @@ jobs:
         scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
         echo "This is script dir: $scriptDir"
         ## cd to the parent directory, i.e. the root of the git repo
-        cd ${scriptDir}/java-$REPO
+        cd ${scriptDir}/../java-$REPO
 
         PATH=${HOME}/java-core/java-core/package
         ls -R $PATH
