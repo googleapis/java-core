@@ -53,6 +53,9 @@ jobs:
         REPO=${{matrix.repo}}
         SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
         PATH=/home/runner/work/java-core/java-core/java-$REPO/package
+
+        ## cd to the parent directory, i.e. the root of the git repo
+        pushd /home/runner/work/java-core/java-core/java-$REPO
         ls -R $PATH
         FILE_PATH="$PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
@@ -62,7 +65,7 @@ jobs:
         fi
 
         ## cd to the parent directory, i.e. the root of the git repo
-        pushd /home/runner/work/java-core/java-core/java-$REPO
+        #pushd /home/runner/work/java-core/java-core/java-$REPO
 
         mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
