@@ -6,7 +6,6 @@ on:
 name: downstream
 jobs:
   client-libraries:
-    needs: shared-dependencies
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
