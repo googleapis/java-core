@@ -35,7 +35,6 @@ jobs:
       matrix:
         java: [17]
         repo:
-        - eventarc
         - accessapproval
         - accesscontextmanager
         - aiplatform
@@ -54,7 +53,6 @@ jobs:
         - bigquerydatatransfer
         - bigquerymigration
         - bigqueryreservation
-        - bigquerystorage
         - bigtable
         - billing
         - billingbudgets
@@ -117,7 +115,6 @@ jobs:
         - policy-troubleshooter
         - private-catalog
         - profiler
-        - pubsub
         - pubsublite
         - recaptchaenterprise
         - recommendations-ai
