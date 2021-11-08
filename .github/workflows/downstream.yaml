@@ -56,7 +56,6 @@ jobs:
         - bigqueryreservation
         - bigquerystorage
         - bigtable
-        - bigtable-hbase
         - billing
         - billingbudgets
         - binary-authorization
@@ -120,9 +119,6 @@ jobs:
         - profiler
         - pubsub
         - pubsublite
-        - pubsublite-flink
-        - pubsublite-kafka
-        - pubsublite-spark
         - recaptchaenterprise
         - recommendations-ai
         - recommender
@@ -189,6 +185,10 @@ jobs:
 
         mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
+        if [ $REPO = "bigtable"]; then
+          pushd google-cloud-bigtable-deps-bom
+        fi
+
         # replace version
         xmllint --shell <(cat pom.xml) << EOF
         setns x=http://maven.apache.org/POM/4.0.0
@@ -197,6 +197,10 @@ jobs:
         set ${SHARED_DEPS_VERSION}
         save pom.xml
         EOF
+
+        if [ $REPO = "bigtable"]; then
+          popd
+        fi
 
         # run dependencies script
         mvn -Denforcer.skip=true clean install
