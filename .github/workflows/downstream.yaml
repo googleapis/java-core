@@ -185,7 +185,7 @@ jobs:
 
         mvn install:install-file -Dfile=${FILE_PATH} -DgroupId=com.google.cloud -DartifactId=google-cloud-shared-dependencies -Dversion=${SHARED_DEPS_VERSION} -Dpackaging=jar
 
-        if [ $REPO = "bigtable"]; then
+        if [[ $REPO == "bigtable" ]]; then
           pushd google-cloud-bigtable-deps-bom
         fi
 
@@ -198,7 +198,7 @@ jobs:
         save pom.xml
         EOF
 
-        if [ $REPO = "bigtable"]; then
+        if [[ $REPO == "bigtable" ]]; then
           popd
         fi
 
