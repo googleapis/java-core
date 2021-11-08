@@ -58,7 +58,7 @@ jobs:
         #chmod +x /home/runner/work/java-core/java-core/java-$REPO/downstream-check.sh
 
         ls -R $PACKAGE_PATH
-        FILE_PATH="PACKAGE_PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
+        FILE_PATH="$PACKAGE_PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
         if [ ! -f "$FILE_PATH" ]; then
         echo "$FILE_PATH does not exist."
