@@ -74,7 +74,7 @@ fi
 git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
 pushd java-${REPO}
 
-if [ $REPO = "bigtable"]; then
+if [[ $REPO == "bigtable" ]]; then
   pushd google-cloud-bigtable-deps-bom
 fi
 
@@ -87,7 +87,7 @@ set ${SHARED_DEPS_VERSION}
 save pom.xml
 EOF
 
-if [ $REPO = "bigtable"]; then
+if [[ $REPO == "bigtable" ]]; then
   popd
 fi
 
