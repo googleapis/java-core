@@ -36,6 +36,130 @@ jobs:
         java: [17]
         repo:
         - eventarc
+        - accessapproval
+        - accesscontextmanager
+        - aiplatform
+        - analytics-admin
+        - analytics-data
+        - api-gateway
+        - apigee-connect
+        - appengine-admin
+        - area120-tables
+        - artifact-registry
+        - asset
+        - assured-workloads
+        - automl
+        - bigquery
+        - bigqueryconnection
+        - bigquerydatatransfer
+        - bigquerymigration
+        - bigqueryreservation
+        - bigquerystorage
+        - bigtable
+        - bigtable-hbase
+        - billing
+        - billingbudgets
+        - binary-authorization
+        - channel
+        - cloudbuild
+        - compute
+        - contact-center-insights
+        - container
+        - containeranalysis
+        - data-fusion
+        - datacatalog
+        - dataflow
+        - datalabeling
+        - dataproc
+        - dataproc-metastore
+        - datastore
+        - datastream
+        - debugger-client
+        - deploy
+        - dialogflow
+        - dialogflow-cx
+        - dlp
+        - dms
+        - dns
+        - document-ai
+        - domains
+        - errorreporting
+        - essential-contacts
+        - eventarc
+        - filestore
+        - firestore
+        - functions
+        - game-servers
+        - gke-connect-gateway
+        - gkehub
+        - gsuite-addons
+        - iam-admin
+        - iamcredentials
+        - iot
+        - kms
+        - language
+        - life-sciences
+        - logging
+        - logging-logback
+        - managed-identities
+        - mediatranslation
+        - memcache
+        - monitoring
+        - monitoring-dashboards
+        - network-management
+        - network-security
+        - networkconnectivity
+        - notebooks
+        - orchestration-airflow
+        - orgpolicy
+        - os-config
+        - os-login
+        - phishingprotection
+        - policy-troubleshooter
+        - private-catalog
+        - profiler
+        - pubsub
+        - pubsublite
+        - pubsublite-flink
+        - pubsublite-kafka
+        - pubsublite-spark
+        - recaptchaenterprise
+        - recommendations-ai
+        - recommender
+        - redis
+        - resource-settings
+        - resourcemanager
+        - retail
+        - scheduler
+        - secretmanager
+        - security-private-ca
+        - securitycenter
+        - securitycenter-settings
+        - service-control
+        - service-management
+        - service-usage
+        - servicedirectory
+        - shell
+        - spanner
+        - spanner-jdbc
+        - speech
+        - storage
+        - storage-nio
+        - storage-transfer
+        - talent
+        - tasks
+        - texttospeech
+        - tpu
+        - trace
+        - translate
+        - video-intelligence
+        - video-transcoder
+        - vision
+        - vpcaccess
+        - webrisk
+        - websecurityscanner
+        - workflow-executions
+        - workflows
     steps:
     - uses: actions/checkout@v2
       with:
@@ -50,14 +174,9 @@ jobs:
     - run: java -version
     - run: sudo apt-get install libxml2-utils
     - run: |
-
         REPO=${{matrix.repo}}
         SHARED_DEPS_VERSION=${{needs.shared-dependencies.outputs.shared-dependencies-version }}
         PACKAGE_PATH=/home/runner/work/java-core/java-core/package
-        #cp ${0} /home/runner/work/java-core/java-core/java-$REPO/downstream-check.sh
-        #chmod +x /home/runner/work/java-core/java-core/java-$REPO/downstream-check.sh
-
-        ls -R $PACKAGE_PATH
         FILE_PATH="$PACKAGE_PATH/${SHARED_DEPS_VERSION}/google-cloud-shared-dependencies-${SHARED_DEPS_VERSION}-tests.jar"
 
         if [ ! -f "$FILE_PATH" ]; then
