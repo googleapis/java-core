@@ -72,7 +72,7 @@ fi
 
 # Check this BOM against a few java client libraries
 git clone "https://github.com/googleapis/java-${REPO}.git" --depth=1
-pushd ${REPO}
+pushd java-${REPO}
 # replace version
 xmllint --shell <(cat pom.xml) << EOF
 setns x=http://maven.apache.org/POM/4.0.0
