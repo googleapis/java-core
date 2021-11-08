@@ -32,7 +32,6 @@ jobs:
         - bigqueryreservation
         - bigquerystorage
         - bigtable
-        - bigtable-hbase
         - billing
         - billingbudgets
         - binary-authorization
@@ -96,9 +95,6 @@ jobs:
         - profiler
         - pubsub
         - pubsublite
-        - pubsublite-flink
-        - pubsublite-kafka
-        - pubsublite-spark
         - recaptchaenterprise
         - recommendations-ai
         - recommender
