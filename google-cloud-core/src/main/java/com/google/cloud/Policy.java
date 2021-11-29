@@ -292,7 +292,8 @@ public final class Policy implements Serializable {
     public final Builder removeIdentity(Role role, Identity first, Identity... others) {
       checkArgument(
           !isConditional(this.version, this.bindingsList),
-          "removeIdentity() is only supported with version 1 policies and non-conditional policies");
+          "removeIdentity() is only supported with version 1 policies and non-conditional"
+              + " policies");
       String nullIdentityMessage = "Null identities are not permitted.";
       checkNotNull(first, nullIdentityMessage);
       checkNotNull(others, nullIdentityMessage);
