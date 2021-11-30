@@ -21,9 +21,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.graalvm.nativeimage</groupId>
-      <artifactId>svm</artifactId>
-      <scope>provided</scope>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
     </dependency>
 
     <dependency>
@@ -31,6 +30,17 @@
       <artifactId>grpc-netty-shaded</artifactId>
       <scope>provided</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>org.graalvm.nativeimage</groupId>
+      <artifactId>svm</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.graalvm.sdk</groupId>
+      <artifactId>graal-sdk</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
