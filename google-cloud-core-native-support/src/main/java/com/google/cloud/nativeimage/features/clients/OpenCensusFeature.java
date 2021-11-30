@@ -21,9 +21,7 @@ import static com.google.cloud.nativeimage.features.NativeImageUtils.registerFor
 import com.oracle.svm.core.annotate.AutomaticFeature;
 import org.graalvm.nativeimage.hosted.Feature;
 
-/**
- * Registers reflection usage in OpenCensus libraries.
- */
+/** Registers reflection usage in OpenCensus libraries. */
 @AutomaticFeature
 final class OpenCensusFeature implements Feature {
 
@@ -32,12 +30,9 @@ final class OpenCensusFeature implements Feature {
   @Override
   public void beforeAnalysis(BeforeAnalysisAccess access) {
     if (access.findClassByName(OPEN_CENSUS_CLASS) != null) {
-      registerForReflectiveInstantiation(
-          access, "io.opencensus.impl.metrics.MetricsComponentImpl");
-      registerForReflectiveInstantiation(
-          access, "io.opencensus.impl.tags.TagsComponentImpl");
-      registerForReflectiveInstantiation(
-          access, "io.opencensus.impl.trace.TraceComponentImpl");
+      registerForReflectiveInstantiation(access, "io.opencensus.impl.metrics.MetricsComponentImpl");
+      registerForReflectiveInstantiation(access, "io.opencensus.impl.tags.TagsComponentImpl");
+      registerForReflectiveInstantiation(access, "io.opencensus.impl.trace.TraceComponentImpl");
     }
   }
 }

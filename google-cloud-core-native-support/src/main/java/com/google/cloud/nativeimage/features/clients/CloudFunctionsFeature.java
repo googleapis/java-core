@@ -37,9 +37,7 @@ import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.hosted.Feature;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
 
-/**
- * A feature which registers reflective usages of the Cloud Functions library.
- */
+/** A feature which registers reflective usages of the Cloud Functions library. */
 @AutomaticFeature
 final class CloudFunctionsFeature implements Feature {
 
@@ -57,12 +55,9 @@ final class CloudFunctionsFeature implements Feature {
     Class<?> invokerClass = access.findClassByName(FUNCTION_INVOKER_CLASS);
     if (invokerClass != null) {
       // JCommander libraries
-      registerClassForReflection(
-          access, "com.beust.jcommander.converters.StringConverter");
-      registerClassForReflection(
-          access, "com.beust.jcommander.validators.NoValidator");
-      registerClassForReflection(
-          access, "com.beust.jcommander.validators.NoValueValidator");
+      registerClassForReflection(access, "com.beust.jcommander.converters.StringConverter");
+      registerClassForReflection(access, "com.beust.jcommander.validators.NoValidator");
+      registerClassForReflection(access, "com.beust.jcommander.validators.NoValueValidator");
 
       // Jetty libraries
       registerClassForReflection(access, "org.eclipse.jetty.http.HttpTokens");
@@ -88,34 +83,39 @@ final class CloudFunctionsFeature implements Feature {
               .map(name -> access.findClassByName(name))
               .collect(Collectors.toList());
 
-      scanJarClasspath(access, clazz -> {
-        boolean isFunctionSubtype = functionClasses.stream()
-            .anyMatch(function ->
-                function.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers()));
+      scanJarClasspath(
+          access,
+          clazz -> {
+            boolean isFunctionSubtype =
+                functionClasses.stream()
+                    .anyMatch(
+                        function ->
+                            function.isAssignableFrom(clazz)
+                                && !Modifier.isAbstract(clazz.getModifiers()));
 
-        if (isFunctionSubtype) {
-          RuntimeReflection.register(clazz);
-          RuntimeReflection.register(clazz.getDeclaredConstructors());
-          RuntimeReflection.register(clazz.getDeclaredMethods());
+            if (isFunctionSubtype) {
+              RuntimeReflection.register(clazz);
+              RuntimeReflection.register(clazz.getDeclaredConstructors());
+              RuntimeReflection.register(clazz.getDeclaredMethods());
 
-          // This part is to register the parameterized class of BackgroundFunctions
-          // for reflection; i.e. register type T in BackgroundFunction<T>
-          for (Type type : clazz.getGenericInterfaces()) {
-            if (type instanceof ParameterizedType) {
-              ParameterizedType paramType = (ParameterizedType) type;
-              for (Type argument : paramType.getActualTypeArguments()) {
-                registerClassHierarchyForReflection(access, argument.getTypeName());
+              // This part is to register the parameterized class of BackgroundFunctions
+              // for reflection; i.e. register type T in BackgroundFunction<T>
+              for (Type type : clazz.getGenericInterfaces()) {
+                if (type instanceof ParameterizedType) {
+                  ParameterizedType paramType = (ParameterizedType) type;
+                  for (Type argument : paramType.getActualTypeArguments()) {
+                    registerClassHierarchyForReflection(access, argument.getTypeName());
+                  }
+                }
               }
             }
-          }
-        }
-      });
+          });
     }
   }
 
   /**
-   * Scan the JAR classpath for classes.
-   * The {@code classProcessorFunction} is run once for each class in the classpath.
+   * Scan the JAR classpath for classes. The {@code classProcessorFunction} is run once for each
+   * class in the classpath.
    */
   private static void scanJarClasspath(
       FeatureAccess access, Consumer<Class<?>> classProcessorCallback) {
@@ -130,10 +130,7 @@ final class CloudFunctionsFeature implements Feature {
           JarEntry jarEntry = entries.nextElement();
           String fileName = jarEntry.getName();
           if (fileName.endsWith(".class")) {
-            String className =
-                fileName
-                    .substring(0, fileName.length() - 6)
-                    .replaceAll("/", ".");
+            String className = fileName.substring(0, fileName.length() - 6).replaceAll("/", ".");
 
             Class<?> clazz = access.findClassByName(className);
             if (clazz != null) {

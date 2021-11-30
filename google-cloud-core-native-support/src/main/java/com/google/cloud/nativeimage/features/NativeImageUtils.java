@@ -31,18 +31,13 @@ import java.util.logging.Logger;
 import org.graalvm.nativeimage.hosted.Feature.FeatureAccess;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
 
-/**
- * Internal class offering helper methods for registering methods/classes for reflection.
- */
+/** Internal class offering helper methods for registering methods/classes for reflection. */
 public class NativeImageUtils {
 
   private static final Logger LOGGER = Logger.getLogger(NativeImageUtils.class.getName());
 
-  /**
-   * Returns the method of a class or fails if it is not present.
-   */
-  public static Method getMethodOrFail(
-      Class<?> clazz, String methodName, Class<?>... params) {
+  /** Returns the method of a class or fails if it is not present. */
+  public static Method getMethodOrFail(Class<?> clazz, String methodName, Class<?>... params) {
     try {
       return clazz.getDeclaredMethod(methodName, params);
     } catch (NoSuchMethodException e) {
@@ -51,9 +46,7 @@ public class NativeImageUtils {
     }
   }
 
-  /**
-   * Registers a class for reflective construction via its default constructor.
-   */
+  /** Registers a class for reflective construction via its default constructor. */
   public static void registerForReflectiveInstantiation(FeatureAccess access, String className) {
     Class<?> clazz = access.findClassByName(className);
     if (clazz != null) {
@@ -65,23 +58,18 @@ public class NativeImageUtils {
     }
   }
 
-  /**
-   * Registers all constructors of a class for reflection.
-   */
+  /** Registers all constructors of a class for reflection. */
   public static void registerConstructorsForReflection(FeatureAccess access, String name) {
     Class<?> clazz = access.findClassByName(name);
     if (clazz != null) {
       RuntimeReflection.register(clazz);
       RuntimeReflection.register(clazz.getDeclaredConstructors());
     } else {
-      LOGGER.warning(
-          "Failed to find " + name + " on the classpath for reflection.");
+      LOGGER.warning("Failed to find " + name + " on the classpath for reflection.");
     }
   }
 
-  /**
-   * Registers an entire class for reflection use.
-   */
+  /** Registers an entire class for reflection use. */
   public static void registerClassForReflection(FeatureAccess access, String name) {
     Class<?> clazz = access.findClassByName(name);
     if (clazz != null) {
@@ -90,8 +78,7 @@ public class NativeImageUtils {
       RuntimeReflection.register(clazz.getDeclaredFields());
       RuntimeReflection.register(clazz.getDeclaredMethods());
     } else {
-      LOGGER.warning(
-          "Failed to find " + name + " on the classpath for reflection.");
+      LOGGER.warning("Failed to find " + name + " on the classpath for reflection.");
     }
   }
 
@@ -111,14 +98,11 @@ public class NativeImageUtils {
         }
       }
     } else {
-      LOGGER.warning(
-          "Failed to find " + className + " on the classpath for reflection.");
+      LOGGER.warning("Failed to find " + className + " on the classpath for reflection.");
     }
   }
 
-  /**
-   * Registers a class for unsafe reflective field access.
-   */
+  /** Registers a class for unsafe reflective field access. */
   public static void registerForUnsafeFieldAccess(
       FeatureAccess access, String className, String... fields) {
     Class<?> clazz = access.findClassByName(className);
@@ -134,14 +118,13 @@ public class NativeImageUtils {
       }
     } else {
       LOGGER.warning(
-          "Failed to find " + className
+          "Failed to find "
+              + className
               + " on the classpath for unsafe fields access registration.");
     }
   }
 
-  /**
-   * Registers all the classes under the specified package for reflection.
-   */
+  /** Registers all the classes under the specified package for reflection. */
   public static void registerPackageForReflection(FeatureAccess access, String packageName) {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
@@ -165,8 +148,8 @@ public class NativeImageUtils {
     }
   }
 
-  private static List<String> findClassesInJar(
-      JarURLConnection urlConnection, String packageName) throws IOException {
+  private static List<String> findClassesInJar(JarURLConnection urlConnection, String packageName)
+      throws IOException {
 
     List<String> result = new ArrayList<>();
 
@@ -178,10 +161,7 @@ public class NativeImageUtils {
       String entryName = entry.getName();
 
       if (entryName.endsWith(".class")) {
-        String javaClassName =
-            entryName
-                .replace(".class", "")
-                .replace('/', '.');
+        String javaClassName = entryName.replace(".class", "").replace('/', '.');
 
         if (javaClassName.startsWith(packageName)) {
           result.add(javaClassName);

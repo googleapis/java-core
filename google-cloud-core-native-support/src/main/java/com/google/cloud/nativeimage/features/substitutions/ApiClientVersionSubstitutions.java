@@ -21,17 +21,14 @@ import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
 import java.util.function.BooleanSupplier;
 
-/**
- * Substitution for setting Java version correctly in the Google Java Http Client.
- */
+/** Substitution for setting Java version correctly in the Google Java Http Client. */
 @TargetClass(
     className =
         "com.google.api.client.googleapis.services.AbstractGoogleClientRequest$ApiClientVersion",
     onlyWith = ApiClientVersionSubstitutions.OnlyIfInClassPath.class)
 final class ApiClientVersionSubstitutions {
 
-  @Alias
-  private String versionString;
+  @Alias private String versionString;
 
   @Substitute
   public String toString() {
@@ -45,8 +42,7 @@ final class ApiClientVersionSubstitutions {
     }
   }
 
-  private ApiClientVersionSubstitutions() {
-  }
+  private ApiClientVersionSubstitutions() {}
 
   static class OnlyIfInClassPath implements BooleanSupplier {
 

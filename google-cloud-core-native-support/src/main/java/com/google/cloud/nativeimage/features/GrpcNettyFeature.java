@@ -24,9 +24,7 @@ import static com.google.cloud.nativeimage.features.NativeImageUtils.registerFor
 import com.oracle.svm.core.annotate.AutomaticFeature;
 import org.graalvm.nativeimage.hosted.Feature;
 
-/**
- * Configures Native Image settings for the grpc-netty-shaded dependency.
- */
+/** Configures Native Image settings for the grpc-netty-shaded dependency. */
 @AutomaticFeature
 final class GrpcNettyFeature implements Feature {
 
@@ -63,14 +61,12 @@ final class GrpcNettyFeature implements Feature {
           access, "io.grpc.netty.shaded.io.netty.channel.socket.nio.NioSocketChannel");
       registerClassForReflection(
           access, "io.grpc.netty.shaded.io.netty.util.internal.NativeLibraryUtil");
-      registerClassForReflection(
-          access, "io.grpc.netty.shaded.io.netty.util.ReferenceCountUtil");
+      registerClassForReflection(access, "io.grpc.netty.shaded.io.netty.util.ReferenceCountUtil");
       registerClassForReflection(
           access, "io.grpc.netty.shaded.io.netty.buffer.AbstractByteBufAllocator");
 
       // Epoll Libraries
-      registerClassForReflection(
-          access, "io.grpc.netty.shaded.io.netty.channel.epoll.Epoll");
+      registerClassForReflection(access, "io.grpc.netty.shaded.io.netty.channel.epoll.Epoll");
       registerClassForReflection(
           access, "io.grpc.netty.shaded.io.netty.channel.epoll.EpollChannelOption");
       registerClassForReflection(
@@ -114,19 +110,13 @@ final class GrpcNettyFeature implements Feature {
     }
   }
 
-  /**
-   * Miscellaneous classes that need to be registered coming from various JARs.
-   */
+  /** Miscellaneous classes that need to be registered coming from various JARs. */
   private static void loadMiscClasses(BeforeAnalysisAccess access) {
-    registerClassHierarchyForReflection(
-        access, "com.google.protobuf.DescriptorProtos");
+    registerClassHierarchyForReflection(access, "com.google.protobuf.DescriptorProtos");
     registerClassForReflection(access, "com.google.api.FieldBehavior");
 
-    registerForUnsafeFieldAccess(
-        access, "javax.net.ssl.SSLContext", "contextSpi");
-    registerClassForReflection(
-        access, "java.lang.management.ManagementFactory");
-    registerClassForReflection(
-        access, "java.lang.management.RuntimeMXBean");
+    registerForUnsafeFieldAccess(access, "javax.net.ssl.SSLContext", "contextSpi");
+    registerClassForReflection(access, "java.lang.management.ManagementFactory");
+    registerClassForReflection(access, "java.lang.management.RuntimeMXBean");
   }
 }

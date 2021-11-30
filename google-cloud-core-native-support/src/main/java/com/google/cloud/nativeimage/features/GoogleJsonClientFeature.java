@@ -23,9 +23,7 @@ import com.oracle.svm.core.configure.ResourcesRegistry;
 import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.hosted.Feature;
 
-/**
- * Configures Native Image settings for the Google JSON Client.
- */
+/** Configures Native Image settings for the Google JSON Client. */
 @AutomaticFeature
 final class GoogleJsonClientFeature implements Feature {
 
@@ -35,8 +33,7 @@ final class GoogleJsonClientFeature implements Feature {
   private static final String GOOGLE_API_CLIENT_REQUEST_CLASS =
       "com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest";
 
-  private static final String GENERIC_JSON_CLASS =
-      "com.google.api.client.json.GenericJson";
+  private static final String GENERIC_JSON_CLASS = "com.google.api.client.json.GenericJson";
 
   @Override
   public void beforeAnalysis(BeforeAnalysisAccess access) {
@@ -64,8 +61,7 @@ final class GoogleJsonClientFeature implements Feature {
       ResourcesRegistry resourcesRegistry = ImageSingletons.lookup(ResourcesRegistry.class);
       resourcesRegistry.addResources(
           "\\Qcom/google/api/client/googleapis/google-api-client.properties\\E");
-      resourcesRegistry.addResources(
-          "\\Qcom/google/api/client/googleapis/google.p12\\E");
+      resourcesRegistry.addResources("\\Qcom/google/api/client/googleapis/google.p12\\E");
       resourcesRegistry.addResources(
           "\\Qcom/google/api/client/http/google-http-client.properties\\E");
     }
@@ -81,33 +77,23 @@ final class GoogleJsonClientFeature implements Feature {
           (duringAccess, subtype) -> registerClassForReflection(access, subtype.getName()),
           genericJsonClass);
 
-      registerClassForReflection(
-          access, "com.google.api.client.util.GenericData");
-      registerClassForReflection(
-          access, "com.google.api.client.json.webtoken.JsonWebToken");
-      registerClassForReflection(
-          access, "com.google.api.client.json.webtoken.JsonWebToken$Header");
+      registerClassForReflection(access, "com.google.api.client.util.GenericData");
+      registerClassForReflection(access, "com.google.api.client.json.webtoken.JsonWebToken");
+      registerClassForReflection(access, "com.google.api.client.json.webtoken.JsonWebToken$Header");
       registerClassForReflection(
           access, "com.google.api.client.json.webtoken.JsonWebToken$Payload");
       registerClassForReflection(
-          access,  "com.google.api.client.json.webtoken.JsonWebSignature$Header");
-      registerClassForReflection(
-          access, "com.google.api.client.json.webtoken.JsonWebSignature");
-      registerClassForReflection(
-          access, "com.google.api.client.http.UrlEncodedContent");
-      registerClassForReflection(
-          access, "com.google.api.client.http.GenericUrl");
-      registerClassForReflection(
-          access, "com.google.api.client.http.HttpRequest");
-      registerClassForReflection(
-          access, "com.google.api.client.http.HttpHeaders");
+          access, "com.google.api.client.json.webtoken.JsonWebSignature$Header");
+      registerClassForReflection(access, "com.google.api.client.json.webtoken.JsonWebSignature");
+      registerClassForReflection(access, "com.google.api.client.http.UrlEncodedContent");
+      registerClassForReflection(access, "com.google.api.client.http.GenericUrl");
+      registerClassForReflection(access, "com.google.api.client.http.HttpRequest");
+      registerClassForReflection(access, "com.google.api.client.http.HttpHeaders");
     }
   }
 
   private void loadMiscClasses(BeforeAnalysisAccess access) {
-    registerClassForReflection(
-        access, "com.google.common.util.concurrent.AbstractFuture");
-    registerClassForReflection(
-        access, "com.google.common.util.concurrent.AbstractFuture$Waiter");
+    registerClassForReflection(access, "com.google.common.util.concurrent.AbstractFuture");
+    registerClassForReflection(access, "com.google.common.util.concurrent.AbstractFuture$Waiter");
   }
 }

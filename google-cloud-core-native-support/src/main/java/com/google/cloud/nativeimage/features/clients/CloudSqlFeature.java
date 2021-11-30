@@ -24,20 +24,16 @@ import org.graalvm.nativeimage.hosted.Feature;
 import org.graalvm.nativeimage.hosted.RuntimeClassInitialization;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
 
-/**
- * Registers GraalVM configuration for the Cloud SQL libraries for MySQL and Postgres.
- */
+/** Registers GraalVM configuration for the Cloud SQL libraries for MySQL and Postgres. */
 @AutomaticFeature
 final class CloudSqlFeature implements Feature {
 
   private static final String CLOUD_SQL_SOCKET_CLASS =
       "com.google.cloud.sql.core.CoreSocketFactory";
 
-  private static final String POSTGRES_SOCKET_CLASS =
-      "com.google.cloud.sql.postgres.SocketFactory";
+  private static final String POSTGRES_SOCKET_CLASS = "com.google.cloud.sql.postgres.SocketFactory";
 
-  private static final String MYSQL_SOCKET_CLASS =
-      "com.google.cloud.sql.mysql.SocketFactory";
+  private static final String MYSQL_SOCKET_CLASS = "com.google.cloud.sql.mysql.SocketFactory";
 
   @Override
   public void beforeAnalysis(BeforeAnalysisAccess access) {
@@ -55,39 +51,29 @@ final class CloudSqlFeature implements Feature {
 
     // Register Hikari configs if used with Cloud SQL.
     if (access.findClassByName("com.zaxxer.hikari.HikariConfig") != null) {
-      NativeImageUtils.registerClassForReflection(
-          access,
-          "com.zaxxer.hikari.HikariConfig");
+      NativeImageUtils.registerClassForReflection(access, "com.zaxxer.hikari.HikariConfig");
 
       RuntimeReflection.register(
           access.findClassByName("[Lcom.zaxxer.hikari.util.ConcurrentBag$IConcurrentBagEntry;"));
 
-      RuntimeReflection.register(
-          access.findClassByName("[Ljava.sql.Statement;")
-      );
+      RuntimeReflection.register(access.findClassByName("[Ljava.sql.Statement;"));
     }
 
     // Register PostgreSQL driver config.
     if (access.findClassByName(POSTGRES_SOCKET_CLASS) != null) {
       NativeImageUtils.registerClassForReflection(
           access, "com.google.cloud.sql.postgres.SocketFactory");
-      NativeImageUtils.registerClassForReflection(
-          access, "org.postgresql.PGProperty");
+      NativeImageUtils.registerClassForReflection(access, "org.postgresql.PGProperty");
     }
 
     // Register MySQL driver config.
     if (access.findClassByName(MYSQL_SOCKET_CLASS) != null) {
-      NativeImageUtils.registerClassForReflection(
-          access,
-          MYSQL_SOCKET_CLASS);
+      NativeImageUtils.registerClassForReflection(access, MYSQL_SOCKET_CLASS);
 
       NativeImageUtils.registerConstructorsForReflection(
-          access,
-          "com.mysql.cj.conf.url.SingleConnectionUrl");
+          access, "com.mysql.cj.conf.url.SingleConnectionUrl");
 
-      NativeImageUtils.registerConstructorsForReflection(
-          access,
-          "com.mysql.cj.log.StandardLogger");
+      NativeImageUtils.registerConstructorsForReflection(access, "com.mysql.cj.log.StandardLogger");
 
       access.registerSubtypeReachabilityHandler(
           (duringAccess, exceptionClass) ->

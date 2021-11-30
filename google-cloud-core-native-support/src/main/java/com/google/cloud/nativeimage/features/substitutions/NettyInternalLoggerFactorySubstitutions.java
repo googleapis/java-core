@@ -23,13 +23,12 @@ import io.grpc.netty.shaded.io.netty.util.internal.logging.JdkLoggerFactory;
 import java.util.function.BooleanSupplier;
 
 /**
- * Substitutions for {@link InternalLoggerFactory} which are needed to avoid dynamic loading
- * of logging library.
+ * Substitutions for {@link InternalLoggerFactory} which are needed to avoid dynamic loading of
+ * logging library.
  */
 @TargetClass(
     className = "io.grpc.netty.shaded.io.netty.util.internal.logging.InternalLoggerFactory",
-    onlyWith = NettyInternalLoggerFactorySubstitutions.OnlyIfInClassPath.class
-)
+    onlyWith = NettyInternalLoggerFactorySubstitutions.OnlyIfInClassPath.class)
 final class NettyInternalLoggerFactorySubstitutions {
 
   @Substitute

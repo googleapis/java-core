@@ -25,12 +25,11 @@ import org.graalvm.nativeimage.hosted.RuntimeReflection;
 /**
  * A optional feature which registers reflective usages of the GRPC Protobuf libraries.
  *
- * <p>This feature is only needed if you need to access proto objects reflectively
- * (such as printing/logging proto objects).
+ * <p>This feature is only needed if you need to access proto objects reflectively (such as
+ * printing/logging proto objects).
  *
- * <p>To add this feature, add
- * "--feature com.google.cloud.nativeimage.features.ProtobufMessageFeature"
- * to your GraalVM configuration.
+ * <p>To add this feature, add "--feature
+ * com.google.cloud.nativeimage.features.ProtobufMessageFeature" to your GraalVM configuration.
  */
 final class ProtobufMessageFeature implements Feature {
 
@@ -68,10 +67,11 @@ final class ProtobufMessageFeature implements Feature {
       access.registerSubtypeReachabilityHandler(
           (duringAccess, subtypeClass) -> {
             if (!PROTO_ENUM_CLASS.equals(subtypeClass.getName())) {
-              Method method = NativeImageUtils.getMethodOrFail(
-                  subtypeClass,
-                  "valueOf",
-                  duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS));
+              Method method =
+                  NativeImageUtils.getMethodOrFail(
+                      subtypeClass,
+                      "valueOf",
+                      duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS));
               RuntimeReflection.register(method);
 
               method = NativeImageUtils.getMethodOrFail(subtypeClass, "getValueDescriptor");
@@ -82,9 +82,7 @@ final class ProtobufMessageFeature implements Feature {
     }
   }
 
-  /**
-   * Given a proto class, registers the public accessor methods for the provided proto class.
-   */
+  /** Given a proto class, registers the public accessor methods for the provided proto class. */
   private static void registerFieldAccessors(Class<?> protoClass) {
     for (Method method : protoClass.getMethods()) {
       boolean hasAccessorPrefix =
@@ -95,9 +93,7 @@ final class ProtobufMessageFeature implements Feature {
     }
   }
 
-  /**
-   * Given a proto class, returns the Builder nested class.
-   */
+  /** Given a proto class, returns the Builder nested class. */
   private static Class<?> getBuilderClass(Class<?> protoClass) {
     for (Class<?> clazz : protoClass.getClasses()) {
       if (clazz.getName().endsWith("Builder")) {

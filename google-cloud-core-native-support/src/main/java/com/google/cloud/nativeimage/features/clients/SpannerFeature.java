@@ -22,9 +22,7 @@ import com.oracle.svm.core.configure.ResourcesRegistry;
 import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.hosted.Feature;
 
-/**
- * Registers Spanner library classes for reflection.
- */
+/** Registers Spanner library classes for reflection. */
 @AutomaticFeature
 final class SpannerFeature implements Feature {
 

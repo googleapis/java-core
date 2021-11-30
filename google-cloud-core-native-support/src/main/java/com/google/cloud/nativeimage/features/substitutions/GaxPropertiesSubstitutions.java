@@ -23,8 +23,8 @@ import com.oracle.svm.core.annotate.TargetClass;
 import java.util.function.BooleanSupplier;
 
 /**
- * This file contains the GaxProperties substitution to correctly set the Java language string
- * in API call headers for Native Image users.
+ * This file contains the GaxProperties substitution to correctly set the Java language string in
+ * API call headers for Native Image users.
  */
 @TargetClass(
     className = "com.google.api.gax.core.GaxProperties",
@@ -35,8 +35,7 @@ final class GaxPropertiesSubstitutions {
   @RecomputeFieldValue(kind = Kind.FromAlias)
   private static String JAVA_VERSION = System.getProperty("java.version") + "-graalvm";
 
-  private GaxPropertiesSubstitutions() {
-  }
+  private GaxPropertiesSubstitutions() {}
 
   static class OnlyIfInClassPath implements BooleanSupplier {
 
@@ -55,4 +54,3 @@ final class GaxPropertiesSubstitutions {
     }
   }
 }
-
