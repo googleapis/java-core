@@ -139,7 +139,8 @@ public class BaseServiceExceptionTest {
     }
   }
 
-  @Test @SuppressWarnings("TruthSelfEquals")
+  @Test
+  @SuppressWarnings("TruthSelfEquals")
   public void testError_Equal() {
     BaseServiceException.Error error = new BaseServiceException.Error(0, "reason", true);
     assertThat(error).isEqualTo(error);
