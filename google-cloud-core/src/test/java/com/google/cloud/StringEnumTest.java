@@ -122,6 +122,7 @@ public class StringEnumTest {
   @Test
   public void testValues() {
     assertThat(
-        Arrays.asList(Letter.values()).containsAll(Arrays.asList(Letter.A, Letter.B, Letter.C)));
+        Arrays.asList(Letter.values()).containsAll(Arrays.asList(Letter.A, Letter.B, Letter.C))
+    ).isTrue();
   }
 }
