@@ -59,7 +59,9 @@ public abstract class BaseService<OptionsT extends ServiceOptions<?, OptionsT>>
   @InternalApi("This class should only be extended within google-cloud-java")
   protected BaseService(OptionsT options) {
     this.options = options;
-    throw new RuntimeException("Very incompatible change!!!");
+    if (this.getClass().getName().contains("BigQuery")) {
+        throw new RuntimeException("Very incompatible change!!!");
+    }
   }
 
   @Override
