@@ -338,7 +338,7 @@
     <module>google-cloud-core-http</module>
     <module>google-cloud-core-grpc</module>
     <module>google-cloud-core-bom</module>
-    <module>google-cloud-core-native-support</module>
+    <module>native-image-support</module>
   </modules>
 
   <reporting>

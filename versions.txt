@@ -2,4 +2,4 @@
 # module:released-version:current-version
 
 google-cloud-core:2.3.5:2.3.6-SNAPSHOT
-google-cloud-core-native-support:0.10.0:0.11.0-SNAPSHOT
+native-image-support:0.10.0:0.11.0-SNAPSHOT
