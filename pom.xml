@@ -292,6 +292,13 @@
         <scope>provided</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.graalvm.sdk</groupId>
+        <artifactId>graal-sdk</artifactId>
+        <version>${graalvm.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
       <!-- Begin test dependencies -->
       <dependency>
         <groupId>com.google.truth</groupId>
