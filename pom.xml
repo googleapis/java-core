@@ -181,11 +181,6 @@
         <artifactId>google-cloud-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-core-native-support</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>com.google.auth</groupId>
