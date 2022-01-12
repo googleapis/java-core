@@ -6,13 +6,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-core-native-support</artifactId>
-  <version>2.3.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-core:current} -->
+  <version>0.11.0-SNAPSHOT</version><!-- {x-version-update:google-cloud-core-native-support:current} -->
   <packaging>jar</packaging>
 
   <parent>
     <artifactId>google-cloud-core-parent</artifactId>
     <groupId>com.google.cloud</groupId>
-    <version>2.3.2-SNAPSHOT</version>
+    <version>2.3.2-SNAPSHOT</version> <!-- {x-version-update:google-cloud-core:current} -->
   </parent>
 
   <description>
@@ -34,12 +34,6 @@
     <dependency>
       <groupId>org.graalvm.nativeimage</groupId>
       <artifactId>svm</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.graalvm.sdk</groupId>
-      <artifactId>graal-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>
