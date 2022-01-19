@@ -14,14 +14,14 @@ jobs:
         java: [17]
         repo:
         - accessapproval
-#        - accesscontextmanager
-#        - aiplatform
-#        - analytics-admin
-#        - analytics-data
-#        - api-gateway
-#        - apigee-connect
-#        - appengine-admin
-#        - area120-tables
+        - accesscontextmanager
+        - aiplatform
+        - analytics-admin
+        - analytics-data
+        - api-gateway
+        - apigee-connect
+        - appengine-admin
+        - area120-tables
 #        - artifact-registry
 #        - asset
 #        - assured-workloads
