@@ -19,6 +19,7 @@ package com.google.cloud;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.Random;
 import org.junit.Test;
 
 public class IdentityTest {
@@ -153,6 +154,11 @@ public class IdentityTest {
     assertEquals("b:c", identity.getValue());
   }
 
+  @Test
+  public void randomTest() {
+    int randomOfTwoInts = new Random().nextBoolean() ? 1 : 2;
+    assertEquals(randomOfTwoInts, 1);
+  }
   private void compareIdentities(Identity expected, Identity actual) {
     assertEquals(expected, actual);
     assertEquals(expected.getType(), actual.getType());
