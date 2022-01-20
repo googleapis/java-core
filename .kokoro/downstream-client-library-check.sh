@@ -17,7 +17,6 @@ set -eo pipefail
 # Display commands being run.
 set -x
 
-
 CORE_LIBRARY_ARTIFACT=$1
 CLIENT_LIBRARY=$2
 ## Get the directory of the build script
@@ -28,10 +27,8 @@ cd ${scriptDir}/..
 # Make java core library artifacts available for 'mvn validate' at the bottom
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
 
-# Read the current version of this java core library in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
-CORE_VERSION_POM=pom.xml
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
-CORE_VERSION=`sed -e 's/xmlns=".*"//' ${CORE_VERSION_POM} | xmllint --xpath '/project/version/text()' -`
+CORE_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
 
 if [ -z "${CORE_VERSION}" ]; then
   echo "Version is not found in ${CORE_VERSION_POM}"
@@ -46,7 +43,7 @@ git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
 pushd java-shared-dependencies/first-party-dependencies
 
 # replace version
-xmllint --shell <(cat pom.xml) << EOF
+xmllint --shell pom.xml << EOF
 setns x=http://maven.apache.org/POM/4.0.0
 cd .//x:artifactId[text()="${CORE_LIBRARY_ARTIFACT}"]
 cd ../x:version
@@ -58,9 +55,8 @@ EOF
 cd ..
 mvn -Denforcer.skip=true clean install
 
-SHARED_DEPS_VERSION_POM=pom.xml
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
-SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' ${SHARED_DEPS_VERSION_POM} | xmllint --xpath '/project/version/text()' -`
+SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
 
 if [ -z "${SHARED_DEPS_VERSION}" ]; then
   echo "Version is not found in ${SHARED_DEPS_VERSION_POM}"
@@ -78,7 +74,7 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
 fi
 
 # replace version
-xmllint --shell <(cat pom.xml) << EOF
+xmllint --shell pom.xml << EOF
 setns x=http://maven.apache.org/POM/4.0.0
 cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
 cd ../x:version
