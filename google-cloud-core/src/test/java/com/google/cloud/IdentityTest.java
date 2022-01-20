@@ -154,12 +154,6 @@ public class IdentityTest {
     assertEquals("b:c", identity.getValue());
   }
 
-  @Test
-  public void randomTest() {
-    int randomOfTwoInts = new Random().nextBoolean() ? 1 : 2;
-    System.out.println("************** " +randomOfTwoInts+" ************** " );
-    assertEquals(randomOfTwoInts, 1);
-  }
   private void compareIdentities(Identity expected, Identity actual) {
     assertEquals(expected, actual);
     assertEquals(expected.getType(), actual.getType());
