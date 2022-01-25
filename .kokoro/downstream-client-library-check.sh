@@ -22,75 +22,68 @@ CLIENT_LIBRARY=$2
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
+cd ${scriptDir}/..
 
-# Clean up many maven cache
-echo "###############CLOUD##################"
-find $HOME/.m2/repository/com/google/cloud
-echo "###############API##################"
-find $HOME/.m2/repository/com/google/api
-#
-#cd ${scriptDir}/..
-#
-## Make java core library artifacts available for 'mvn validate' at the bottom
-#mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
-#
-## Namespace (xmlns) prevents xmllint from specifying tag names in XPath
-#CORE_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
-#
-#if [ -z "${CORE_VERSION}" ]; then
-#  echo "Version is not found in ${CORE_VERSION_POM}"
-#  exit 1
-#fi
-#echo "Version: ${CORE_VERSION}"
-#
-## Round 1
-## Check this java core library against HEAD of java-shared dependencies
-#
-#git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
-#pushd java-shared-dependencies/first-party-dependencies
-#
-## replace version
-#xmllint --shell pom.xml << EOF
-#setns x=http://maven.apache.org/POM/4.0.0
-#cd .//x:artifactId[text()="${CORE_LIBRARY_ARTIFACT}"]
-#cd ../x:version
-#set ${CORE_VERSION}
-#save pom.xml
-#EOF
-#
-## run dependencies script
-#cd ..
-#mvn -Denforcer.skip=true clean install
-#
-## Namespace (xmlns) prevents xmllint from specifying tag names in XPath
-#SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
-#
-#if [ -z "${SHARED_DEPS_VERSION}" ]; then
-#  echo "Version is not found in ${SHARED_DEPS_VERSION_POM}"
-#  exit 1
-#fi
-#
-## Round 2
-#
-## Check this BOM against java client libraries
-#git clone "https://github.com/googleapis/java-${CLIENT_LIBRARY}.git" --depth=1
-#pushd java-${CLIENT_LIBRARY}
-#
-#if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
-#  pushd google-cloud-bigtable-deps-bom
-#fi
-#
-## replace version
-#xmllint --shell pom.xml << EOF
-#setns x=http://maven.apache.org/POM/4.0.0
-#cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
-#cd ../x:version
-#set ${SHARED_DEPS_VERSION}
-#save pom.xml
-#EOF
-#
-#if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
-#  popd
-#fi
-#
-#mvn -Denforcer.skip=true clean install
+# Make java core library artifacts available for 'mvn validate' at the bottom
+mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
+
+# Namespace (xmlns) prevents xmllint from specifying tag names in XPath
+CORE_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
+
+if [ -z "${CORE_VERSION}" ]; then
+  echo "Version is not found in ${CORE_VERSION_POM}"
+  exit 1
+fi
+echo "Version: ${CORE_VERSION}"
+
+# Round 1
+# Check this java core library against HEAD of java-shared dependencies
+
+git clone "https://github.com/googleapis/java-shared-dependencies.git" --depth=1
+pushd java-shared-dependencies/first-party-dependencies
+
+# replace version
+xmllint --shell pom.xml << EOF
+setns x=http://maven.apache.org/POM/4.0.0
+cd .//x:artifactId[text()="${CORE_LIBRARY_ARTIFACT}"]
+cd ../x:version
+set ${CORE_VERSION}
+save pom.xml
+EOF
+
+# run dependencies script
+cd ..
+mvn -Denforcer.skip=true clean install
+
+# Namespace (xmlns) prevents xmllint from specifying tag names in XPath
+SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
+
+if [ -z "${SHARED_DEPS_VERSION}" ]; then
+  echo "Version is not found in ${SHARED_DEPS_VERSION_POM}"
+  exit 1
+fi
+
+# Round 2
+
+# Check this BOM against java client libraries
+git clone "https://github.com/googleapis/java-${CLIENT_LIBRARY}.git" --depth=1
+pushd java-${CLIENT_LIBRARY}
+
+if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
+  pushd google-cloud-bigtable-deps-bom
+fi
+
+# replace version
+xmllint --shell pom.xml << EOF
+setns x=http://maven.apache.org/POM/4.0.0
+cd .//x:artifactId[text()="google-cloud-shared-dependencies"]
+cd ../x:version
+set ${SHARED_DEPS_VERSION}
+save pom.xml
+EOF
+
+if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
+  popd
+fi
+
+mvn -Denforcer.skip=true clean install
