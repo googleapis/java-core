@@ -24,9 +24,11 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
+export MAVEN_OPTS=$(determineMavenOpts)
+
 # Make java core library artifacts available for 'mvn install' at the bottom
 retry_with_backoff 3 10 \
-  mvn install -B -V -ntp \
+  mvn install -B -V -ntp -fae \
   -DskipTests=true \
   -Dmaven.javadoc.skip=true \
   -Dgcloud.download.skip=true
@@ -58,7 +60,7 @@ EOF
 # run dependencies script
 cd ..
 retry_with_backoff 3 10 \
-  mvn install -B -V -ntp \
+  mvn install -B -V -ntp -fae\
   -DskipTests=true \
   -Dmaven.javadoc.skip=true \
   -Dgcloud.download.skip=true \
@@ -96,7 +98,7 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
 fi
 
 retry_with_backoff 3 10 \
-  mvn install -B -V -ntp \
+  mvn install -B -V -ntp -fae\
   -DskipTests=true \
   -Dmaven.javadoc.skip=true \
   -Dgcloud.download.skip=true \
