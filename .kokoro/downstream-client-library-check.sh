@@ -95,7 +95,6 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
 fi
 
 mvn install -B -V -ntp -fae\
--DskipTests=true \
 -Dmaven.javadoc.skip=true \
 -Dgcloud.download.skip=true \
 -Denforcer.skip=true
