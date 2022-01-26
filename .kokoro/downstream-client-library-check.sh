@@ -57,7 +57,7 @@ EOF
 # run dependencies script
 cd ..
 
-mvn install -B -V -ntp -fae\
+mvn install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
 -Dgcloud.download.skip=true \
@@ -94,7 +94,7 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
   popd
 fi
 
-mvn install -B -V -ntp -fae\
+mvn install -B -V -ntp -fae \
 -Dmaven.javadoc.skip=true \
 -Dgcloud.download.skip=true \
 -Denforcer.skip=true
