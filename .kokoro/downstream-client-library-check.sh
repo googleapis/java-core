@@ -98,4 +98,3 @@ mvn install -B -V -ntp -fae \
 -Dmaven.javadoc.skip=true \
 -Dgcloud.download.skip=true \
 -Denforcer.skip=true
-git status
