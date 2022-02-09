@@ -25,7 +25,7 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 cd ${scriptDir}/..
 
 # Make java core library artifacts available for 'mvn install' at the bottom
-mvn install -B -V -ntp -fae \
+mvn verify install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
 -Dgcloud.download.skip=true
@@ -57,11 +57,10 @@ EOF
 # run dependencies script
 cd ..
 
-mvn install -B -V -ntp -fae \
+mvn verify install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
--Dgcloud.download.skip=true \
--Denforcer.skip=true
+-Dgcloud.download.skip=true
 
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
 SHARED_DEPS_VERSION=`sed -e 's/xmlns=".*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
@@ -94,7 +93,6 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
   popd
 fi
 
-mvn install -B -V -ntp -fae \
+mvn verify install -B -V -ntp -fae \
 -Dmaven.javadoc.skip=true \
--Dgcloud.download.skip=true \
--Denforcer.skip=true
+-Dgcloud.download.skip=true
