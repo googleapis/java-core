@@ -23,9 +23,7 @@ import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.hosted.Feature;
 import org.graalvm.nativeimage.impl.ConfigurationCondition;
 
-/**
- * Registers Spanner library classes for reflection.
- */
+/** Registers Spanner library classes for reflection. */
 @AutomaticFeature
 final class SpannerFeature implements Feature {
 
