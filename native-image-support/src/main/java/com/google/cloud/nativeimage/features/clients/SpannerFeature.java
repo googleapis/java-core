@@ -101,14 +101,16 @@ final class SpannerFeature implements Feature {
           "\\Qcom/google/cloud/spanner/connection/ITSqlScriptTest_TestQueryOptions.sql\\E");
     }
   }
-  private void registerSpannerTestClasses(BeforeAnalysisAccess access){
+
+  private void registerSpannerTestClasses(BeforeAnalysisAccess access) {
     Class<?> spannerTestClass = access.findClassByName(SPANNER_TEST_CLASS);
     if (spannerTestClass != null) {
       NativeImageUtils.registerConstructorsForReflection(access, SPANNER_TEST_CLASS);
     }
     Class<?> mockClass = access.findClassByName(MOCK_CLASS);
     if (mockClass != null) {
-      NativeImageUtils.registerClassForReflection(access, "com.google.cloud.spanner.MockDatabaseAdminServiceImpl$MockBackup");
+      NativeImageUtils.registerClassForReflection(
+          access, "com.google.cloud.spanner.MockDatabaseAdminServiceImpl$MockBackup");
     }
   }
 }
