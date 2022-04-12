@@ -151,7 +151,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v3
       with:
+        distribution: zulu
         java-version: ${{matrix.java}}
     - run: java -version
+    - run: sudo apt-get update -y
     - run: sudo apt-get install libxml2-utils
     - run: .kokoro/downstream-client-library-check.sh google-cloud-core-bom ${{matrix.repo}}
