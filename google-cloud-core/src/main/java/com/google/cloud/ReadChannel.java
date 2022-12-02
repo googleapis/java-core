@@ -62,7 +62,7 @@ public interface ReadChannel extends ReadableByteChannel, Closeable, Restorable<
    *
    * <p>If used in conjunction with {@link #seek(long)} the total number of returned bytes from this
    * channel will be reduced by the number of bytes specified to seek.
-
+   *
    * <p>The value provided as {@code limit} will define a <a target="_blank" rel="noopener
    * noreferrer"
    * href="https://en.wikipedia.org/wiki/Interval_(mathematics)#Classification_of_intervals">left-open,
