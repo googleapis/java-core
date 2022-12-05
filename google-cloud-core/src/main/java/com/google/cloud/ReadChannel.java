@@ -65,8 +65,8 @@ public interface ReadChannel extends ReadableByteChannel, Closeable, Restorable<
    *
    * <p>The value provided as {@code limit} will define a <a target="_blank" rel="noopener
    * noreferrer"
-   * href="https://en.wikipedia.org/wiki/Interval_(mathematics)#Classification_of_intervals">left-open,
-   * right-closed</a> interval along with either {@code 0} or any value provided to {@link
+   * href="https://en.wikipedia.org/wiki/Interval_(mathematics)#Classification_of_intervals">left-closed,
+   * right-open</a> interval along with either {@code 0} or any value provided to {@link
    * #seek(long)}, i.e. {@code [}{@link #seek(long)}{@code , }{@link #limit(long)}{@code )}.
    *
    * <h3>An example to help illustrate the relationship</h3>
