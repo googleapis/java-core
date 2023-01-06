@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * A simple wrapper for a {@link Runnable} that logs any exception thrown by it, before re-throwing
  * it.
  */
-public final class LogExceptionRunnable implements Runnable {
+final class LogExceptionRunnable implements Runnable {
 
   private static final Logger log = Logger.getLogger(LogExceptionRunnable.class.getName());
 
