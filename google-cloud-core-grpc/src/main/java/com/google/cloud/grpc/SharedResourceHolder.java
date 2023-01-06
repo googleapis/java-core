@@ -22,10 +22,11 @@ import java.util.IdentityHashMap;
 import java.util.concurrent.*;
 
 /**
- * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject to changes
+ * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject
+ * to changes
  * (https://github.com/grpc/grpc-java/blob/d07ecbe037d2705a1c9f4b6345581f860e505b56/core/src/main/java/io/grpc/internal/SharedResourceHolder.java)
  *
- * A holder for shared resource singletons.
+ * <p>A holder for shared resource singletons.
  *
  * <p>Components like client channels and servers need certain resources, e.g. a thread pool, to
  * run. If the user has not provided such resources, these components will use a default one, which
