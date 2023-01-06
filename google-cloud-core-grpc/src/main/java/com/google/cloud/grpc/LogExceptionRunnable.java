@@ -23,11 +23,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject to changes
+ * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject
+ * to changes
  * (https://github.com/grpc/grpc-java/blob/d07ecbe037d2705a1c9f4b6345581f860e505b56/core/src/main/java/io/grpc/internal/LogExceptionRunnable.java)
  *
- * A simple wrapper for a {@link Runnable} that logs any exception thrown by it, before re-throwing
- * it.
+ * <p>A simple wrapper for a {@link Runnable} that logs any exception thrown by it, before
+ * re-throwing it.
  */
 final class LogExceptionRunnable implements Runnable {
 
