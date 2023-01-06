@@ -20,9 +20,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.IdentityHashMap;
 import java.util.concurrent.*;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
+ * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject to changes
+ * (https://github.com/grpc/grpc-java/blob/d07ecbe037d2705a1c9f4b6345581f860e505b56/core/src/main/java/io/grpc/internal/SharedResourceHolder.java)
+ *
  * A holder for shared resource singletons.
  *
  * <p>Components like client channels and servers need certain resources, e.g. a thread pool, to
@@ -36,7 +38,6 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * <p>Resources are ref-counted and shut down after a delay when the ref-count reaches zero.
  */
-@ThreadSafe
 public final class SharedResourceHolder {
   static final long DESTROY_DELAY_SECONDS = 1;
 

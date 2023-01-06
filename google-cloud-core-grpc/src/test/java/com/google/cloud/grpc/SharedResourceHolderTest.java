@@ -31,7 +31,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link SharedResourceHolder}. */
+/**
+ * This class was copied from grpc-core to prevent dependence on an unstable API that may be subject to changes
+ * (https://github.com/grpc/grpc-java/blob/d07ecbe037d2705a1c9f4b6345581f860e505b56/core/src/test/java/io/grpc/internal/SharedResourceHolderTest.java)
+ *
+ * Unit tests for {@link SharedResourceHolder}.
+ * */
 @RunWith(JUnit4.class)
 public class SharedResourceHolderTest {
 
