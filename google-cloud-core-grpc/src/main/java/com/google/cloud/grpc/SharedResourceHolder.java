@@ -39,7 +39,7 @@ import java.util.concurrent.*;
  *
  * <p>Resources are ref-counted and shut down after a delay when the ref-count reaches zero.
  */
-public final class SharedResourceHolder {
+final class SharedResourceHolder {
   static final long DESTROY_DELAY_SECONDS = 1;
 
   // The sole holder instance.
