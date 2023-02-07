@@ -18,8 +18,12 @@ import synthtool.languages.java as java
 
 java.common_templates(excludes=[
   'README.md',
+  'renovate.json',
   'samples/*',
   '.github/workflows/samples.yaml',
+  '.github/ISSUE_TEMPLATE/*',
+  '.github/PULL_REQUEST_TEMPLATE.md',
+  '.github/sync-repo-settings.yaml',
   '.kokoro/nightly/integration.cfg',
   '.kokoro/nightly/java11-integration.cfg',
   '.kokoro/nightly/samples.cfg'
