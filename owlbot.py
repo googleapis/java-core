@@ -18,6 +18,7 @@ import synthtool.languages.java as java
 
 java.common_templates(excludes=[
   'README.md',
+  'renovate.json',
   'samples/*',
   '.github/workflows/samples.yaml',
   '.github/ISSUE_TEMPLATE/*',
