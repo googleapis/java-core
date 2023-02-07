@@ -20,5 +20,8 @@ java.common_templates(excludes=[
   'README.md',
   'samples/*',
   '.github/workflows/samples.yaml',
+  '.kokoro/nightly/integration.cfg',
+  '.kokoro/nightly/java11-integration.cfg',
+  '.kokoro/nightly/samples.cfg'
 ])
 
