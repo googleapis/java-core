@@ -1,10 +1,5 @@
-Thank you for opening a Pull Request! Before submitting your PR, there are a few things you can do to make sure it goes smoothly:
-- [ ] Make sure to open an issue as a [bug/issue](https://github.com/googleapis/java-core/issues/new/choose) before writing your code!  That way we can discuss the change, evaluate designs, and agree on the general idea
-- [ ] Ensure the tests and linter pass
-- [ ] Code coverage does not decrease (if any source code was changed)
-- [ ] Appropriate docs were updated (if necessary)
+:bus: In January 2023, this library has moved to
+[google-cloud-java/java-core](
+https://github.com/googleapis/google-cloud-java/tree/main/java-core).
+This repository will be archived in the future.
 
-Fixes #<issue_number_goes_here> ☕️
-
-If you write sample code, please follow the [samples format](
-https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/SAMPLE_FORMAT.md).
