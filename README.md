@@ -33,7 +33,7 @@ information.
 
 This library follows [Semantic Versioning][semver].
 
-It is currently in major version one (``1.y.z``), which means that the public API should be
+It is currently in major version two (``2.y.z``), which means that the public API should be
 considered stable.
 
 ## License
