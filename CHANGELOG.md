@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.5](https://github.com/googleapis/java-core/compare/v2.9.4...v2.9.5) (2023-05-31)
+
+
+### Documentation
+
+* Readme to explain migration to google-cloud-java ([#1104](https://github.com/googleapis/java-core/issues/1104)) ([e9828f9](https://github.com/googleapis/java-core/commit/e9828f915db77e5ed7a37ca2849deba410eae6a0))
+
 ## [2.9.4](https://github.com/googleapis/java-core/compare/v2.9.3...v2.9.4) (2023-01-20)
 
 
