@@ -299,8 +299,8 @@ public abstract class ServiceOptions<
       Class<? extends ServiceRpcFactory<OptionsT>> rpcFactoryClass,
       Builder<ServiceT, OptionsT, ?> builder,
       ServiceDefaults<ServiceT, OptionsT> serviceDefaults) {
-    projectId = builder.projectId != null ? builder.projectId : getDefaultProject();
     if (projectIdRequired()) {
+      projectId = builder.projectId != null ? builder.projectId : getDefaultProject();
       checkArgument(
           projectId != null,
           "A project ID is required for this service but could not be determined from the builder "
